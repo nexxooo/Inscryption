@@ -6,7 +6,7 @@ public class Score {
         this.score = 0;
     }
     public int addWeight(int amount){
-        this.score += amount;
+        return this.score += amount;
     }
     public boolean checkVictory(){
         return this.score >= 5;
