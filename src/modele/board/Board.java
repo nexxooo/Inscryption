@@ -1,4 +1,6 @@
-package board;
+package modele.board;
+
+import modele.score.Score;
 
 public class Board {
     private Slot[] playerSlots;
@@ -38,10 +40,10 @@ public class Board {
         }
         return true;
     }
-    /*
+
     public void resolveCombat( Score score)
     {
-
+        
     }
-    */
+
 }

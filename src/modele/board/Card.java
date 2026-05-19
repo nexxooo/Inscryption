@@ -1,4 +1,4 @@
-package board;
+package modele.board;
 
 public abstract class Card {
     private String name;

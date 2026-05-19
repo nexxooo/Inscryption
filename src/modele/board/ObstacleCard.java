@@ -1,4 +1,4 @@
-package board;
+package modele.board;
 
 public class ObstacleCard extends Card {
     public ObstacleCard(String name, int hp, int maxhp) {

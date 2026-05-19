@@ -1,4 +1,4 @@
-package board;
+package modele.board;
 
 public class Slot {
     private Card currentCard;

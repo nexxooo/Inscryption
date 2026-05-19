@@ -1,4 +1,4 @@
-package board;
+package modele.board;
 
 public class AnimalCard extends Card {
     private int attackPoints;
