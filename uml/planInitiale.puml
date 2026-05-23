@@ -1,0 +1,112 @@
+@startuml
+
+
+package "Modèle (Logique & Données)" {
+    
+    abstract class Card {
+        # name : String
+        # healthPoints : int
+        # maxHealth : int
+        + takeDamage(amount: int) : void
+        + isDead() : boolean
+    }
+
+    class AnimalCard {
+        - attackPoints : int
+        - bloodCost : int
+        - boneCost : int
+        - isFlying : boolean
+        + getAttackPoints() : int
+        + getBloodCost() : int
+        + isFlying() : boolean
+    }
+
+    class ObstacleCard {
+        // Ex: Souche, Sapin
+    }
+
+    Card <|-- AnimalCard
+    Card <|-- ObstacleCard
+
+    class Slot {
+        - currentCard : Card
+        + isEmpty() : boolean
+        + getCard() : Card
+        + setCard(c: Card) : void
+        + removeCard() : void
+    }
+
+    class Board {
+        - playerSlots : Slot[4]
+        - opponentSlots : Slot[4]
+        + addCard(c: Card, side: int, index: int) : boolean
+        + resolveCombat(score:Score ) : void
+    }
+
+    Board "1" *-- "8" Slot : contient
+    Slot "1" o-- "0..1" Card : accueille
+
+    class Score {
+        - score : int
+        + addWeight(amount: int) : void
+        + checkVictory() : boolean
+        + getScore() : int
+    }
+
+    abstract class Player {
+        # bonesCount : int
+        # hand : List<Card>
+        # deck : List<Card>
+        + drawCard() : void
+        + addBones(amount: int) : void
+    }
+
+    class HumanPlayer {
+    }
+
+    class OpponentAI {
+        - queue : List<Card>
+        + getIntendedPlays() : List<Card>
+    }
+
+    Player <|-- HumanPlayer
+    Player <|-- OpponentAI
+}
+
+package "Vue & Contrôleur" {
+
+    class GameView {
+        + displayBoard(b: Board) : void
+        + displayHand(p: Player) : void
+        + displayScore(s: Score) : void
+        + displayMessage(msg: String) : void
+    }
+
+    class InputHandler {
+        - scanner : Scanner
+        + getPlayerChoice(min: int, max: int) : int
+        + getSacrificeChoices(count: int) : List<Integer>
+        + askToPassTurn() : boolean
+    }
+
+    class GameEngine {
+        - board : Board
+        - score: Score
+        - human : HumanPlayer
+        - ai : OpponentAI
+        - view : GameView
+        - input : InputHandler
+        + startGame() : void
+        - playTurn() : void
+        - executeCombatPhase() : void
+    }
+}
+
+' Relations entre le moteur et le reste
+GameEngine --> Board : manipule
+GameEngine --> Score : met à jour
+GameEngine --> Player : gère
+GameEngine --> GameView : ordonne l'affichage
+GameEngine --> InputHandler : demande les saisies
+
+@enduml
