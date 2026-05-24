@@ -1,0 +1,160 @@
+@startuml
+
+package "modele.board" {
+    abstract class Card {
+        - m_name : String
+        - m_healthPoints : int
+        - m_maxHealth : int
+        + Card(name: String, healthPoints: int, maxHealth: int)
+        + takeDamage(amount: int) : void
+        + isDead() : boolean
+        + getNom() : String
+        + getMaxHealth() : int
+    }
+
+    class AnimalCard {
+        - m_attackPoints : int
+        - m_bloodCost : int
+        - m_boneCost : int
+        - isFlying : Boolean
+        + AnimalCard(name: String, hp: int, maxhp: int, att: int, blo: int, bone: int, fly: boolean)
+        + getAttackPoints() : int
+        + getBloodCost() : int
+        + isFlying() : Boolean
+        + getBoneCost() : int
+        + toString() : String
+    }
+
+    class ObstacleCard {
+        + ObstacleCard(name: String, hp: int, maxhp: int)
+    }
+
+    class Slot {
+        - m_currentCard : Card
+        + Slot()
+        + isEmpty() : boolean
+        + getCard() : Card
+        + setCard(c: Card) : void
+        + removeCard() : void
+    }
+
+    class Board {
+        + {static} ROW_OPPONENT_QUEUE : int = 0
+        + {static} ROW_OPPONENT_ACTIVE : int = 1
+        + {static} ROW_PLAYER : int = 2
+        - m_grid : Slot[][]
+        + Board()
+        + addCard(c: Card, row: int, col: int) : boolean
+        + getSlot(row: int, col: int) : Slot
+        + AdvanceRow() : void
+    }
+
+    Card <|-- AnimalCard
+    Card <|-- ObstacleCard
+    Slot o--> Card : m_currentCard
+    Board *--> Slot : m_grid
+}
+
+package "modele.player" {
+    abstract class ContainerCard {
+        # m_cards : List<AnimalCard>
+        + ContainerCard()
+        + addCard(card: AnimalCard) : void
+        + getCardCount() : int
+        + isEmpty() : boolean
+    }
+
+    class Hand {
+        + Hand()
+        + getMaxIndex() : int
+        + removeCard(index: int) : void
+        + getListAsString() : String
+    }
+
+    class Deck {
+        + Deck()
+        + getTopCard() : Optional<AnimalCard>
+        + shuffle() : void
+    }
+
+    class Graves {
+        - m_bones : int
+        + Graves()
+        + addCard(card: AnimalCard) : void
+        + getBones() : int
+        + refillDeck(deck: Deck) : void
+    }
+
+    abstract class Player {
+        - m_hand : Hand
+        - m_deck : Deck
+        - m_graves : Graves
+        + Player()
+        + Draw() : void
+        + getBones() : int
+        + getHandAsString() : String
+    }
+
+    class HumanPlayer {
+    }
+
+    class OpponentAI {
+        - queue : List<Card>
+        + OpponentAI(queue: List<Card>)
+        + getIntendedPlays() : List<Card>
+    }
+
+    ContainerCard <|-- Hand
+    ContainerCard <|-- Deck
+    ContainerCard <|-- Graves
+    Player *--> Hand : m_hand
+    Player *--> Deck : m_deck
+    Player *--> Graves : m_graves
+    ContainerCard o--> AnimalCard : contient
+}
+
+package "modele" {
+    class Score {
+        - m_score : int
+        + Score()
+        + addScore(point: int) : void
+        + getScore() : int
+        + getEcart(score2: Score) : int
+        + resetScore() : void
+    }
+}
+
+
+
+package "vue" {
+    enum UserChoice {
+        PIOCHER
+        PASSER
+        PLACER
+    }
+
+    class InputHandeler {
+        - m_choice : UserChoice
+        - m_indexCard : int
+        - m_indexSlot : int
+        - scanner : Scanner
+        + InputHandeler()
+        + getChoice() : UserChoice
+        - setChoice(m_choice: UserChoice) : void
+        + getIndexCard() : int
+        - setIndexCard(m_indexCard: int) : void
+        + getIndexSlot() : int
+        - setIndexSlot(m_indexSlot: int) : void
+        + askChoice(maxCardIndex: int) : void
+        - getIndexSlot(slot: String) : int
+        - getCardIndex(card: String[], maxCardIndex: int) : int
+    }
+
+    InputHandeler --> UserChoice : m_choice
+}
+
+class Main {
+    + {static} main(args: String[]) : void
+}
+
+@enduml
