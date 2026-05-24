@@ -71,6 +71,8 @@ package "Modèle (Logique & Données)" {
 
     Player <|-- HumanPlayer
     Player <|-- OpponentAI
+
+
 }
 
 package "Vue & Contrôleur" {
