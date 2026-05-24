@@ -1,7 +1,5 @@
 package modele.player;
-
 import modele.board.Card;
-
 import java.util.ArrayList;
 import java.util.List;
 
