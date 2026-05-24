@@ -1,23 +1,23 @@
 package modele.board;
 
 public class Slot {
-    private Card currentCard;
+    private Card m_currentCard;
 
     public Slot () {
-        currentCard = null;
+        m_currentCard = null;
     }
 
     public boolean isEmpty() {
-        return currentCard == null;
+        return m_currentCard == null;
     }
     public Card getCard() {
-        return currentCard;
+        return m_currentCard;
     }
     public void setCard(Card c) {
-        this.currentCard = c;
+        this.m_currentCard = c;
     }
     public void removeCard() {
-        this.currentCard = null;
+        this.m_currentCard = null;
     }
 
 }

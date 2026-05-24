@@ -1,24 +1,31 @@
 package modele.board;
 
 public abstract class Card {
-    private String name;
-    private int healthPoints;
-    private int maxHealth;
+    private String m_name;
+    private int m_healthPoints;
+    private int m_maxHealth;
     public Card(String name, int healthPoints, int maxHealth) {
-        this.name = name;
-        this.healthPoints = healthPoints;
-        this.maxHealth = maxHealth;
+        this.m_name = name;
+        this.m_healthPoints = healthPoints;
+        this.m_maxHealth = maxHealth;
     }
 
     public void takeDamage(int amount) {
-        if (healthPoints < amount) {
-            healthPoints = 0;
+        if (m_healthPoints < amount) {
+            m_healthPoints = 0;
         }
         else  {
-            healthPoints -= amount;
+            m_healthPoints -= amount;
         }
     }
     public boolean isDead() {
-        return healthPoints == 0;
+        return m_healthPoints == 0;
+    }
+
+    public String getNom(){
+        return m_name;
+    }
+    public int getMaxHealth(){
+        return m_maxHealth;
     }
 }

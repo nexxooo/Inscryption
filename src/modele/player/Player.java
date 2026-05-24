@@ -1,31 +1,31 @@
 package modele.player;
+import modele.board.AnimalCard;
 import modele.board.Card;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Player {
-    private int bonesCount;
-    private List<Card> hand;
-    private List<Card> deck;
-    public Player(){
-        hand = new ArrayList<>();
-        deck = new ArrayList<>();
-        bonesCount = 0;
+    private Hand m_hand;
+    private Deck m_deck;
+    private Graves m_graves;
+
+    public Player() {
+        m_hand = new Hand();
+        m_deck = new Deck();
+        m_graves = new Graves();
     }
 
-    public void drawCard(){
-        if(!deck.isEmpty()){
-            Card drawnCard = deck.remove(0);
-            hand.add(drawnCard);
-        }
-
+    public void Draw(){
+        Optional<AnimalCard> card = m_deck.getTopCard();
+        card.ifPresent(animalCard -> m_hand.addCard(animalCard));
     }
 
-    public void addBones(int amount)
-    {
-        if (amount > 0)
-        {
-            this.bonesCount = amount;
-        }
+    public int getBones(){
+        return m_graves.getBones();
+    }
+
+    public String getHandAsString(){
+        return m_hand.getListAsString();
     }
 }
