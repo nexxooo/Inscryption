@@ -28,7 +28,4 @@ public abstract class Player {
     public String getHandAsString(){
         return m_hand.getListAsString();
     }
-    public Hand getHand(){
-        return m_hand;
-    }
 }

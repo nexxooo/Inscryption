@@ -20,23 +20,4 @@ public class Slot {
         this.m_currentCard = null;
     }
 
-    public String[] getASCII(){
-        String[] res = new String[7];
-        if(isEmpty()){
-            res[0] = "*************";
-            res[1] = "*           *";
-            res[2] = "*           *";
-            res[3] = "*           *";
-            res[4] = "*           *";
-            res[5] = "*           *";
-            res[6] = "*************";
-            return res;
-        }
-        else {
-            return getASCII();
-
-        }
-
-    }
-
 }
