@@ -28,4 +28,8 @@ public abstract class Card {
     public int getMaxHealth(){
         return m_maxHealth;
     }
+    public int getHealthPoints(){
+        return m_healthPoints;
+    }
+    public abstract String[] getCardAscii();
 }
