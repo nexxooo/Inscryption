@@ -18,7 +18,7 @@ public class Hand extends ContainerCard {
     public String getListAsString() {
         String msg = "votre main:\n";
         for (int i = 0; i < getCardCount(); i++) {
-            msg += "" + i + ". " + m_cards.get(i).toString();
+            msg += "" + i + ". " + m_cards.get(i).toString()+"\n";
         }
         return msg;
 
