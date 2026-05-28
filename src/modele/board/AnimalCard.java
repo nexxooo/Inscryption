@@ -19,7 +19,7 @@ public class AnimalCard extends Card {
     public int getBloodCost(){
         return m_bloodCost;
     }
-    public Boolean isFlying(){
+    public boolean isFlying(){
         return isFlying;
     }
     public int getBoneCost(){return m_boneCost;}
