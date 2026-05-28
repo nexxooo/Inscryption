@@ -12,7 +12,7 @@ public class AnimalCard extends Card {
         m_boneCost = bone;
         isFlying = fly;
     }
-
+    @Override
     public int getAttackPoints(){
         return m_attackPoints;
     }
