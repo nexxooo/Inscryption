@@ -1,5 +1,7 @@
 package modele.board;
 
+import java.util.Optional;
+
 public abstract class Card {
     private String m_name;
     private int m_healthPoints;
@@ -36,4 +38,8 @@ public abstract class Card {
         return 0;
     }
     public boolean isFlying(){return false;}
+
+    public Optional<AnimalCard> isAnimal(){
+        return Optional.empty();
+    }
 }

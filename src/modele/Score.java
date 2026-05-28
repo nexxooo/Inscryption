@@ -15,10 +15,6 @@ public class Score {
         return this.m_score;
     }
 
-    public int getEcart(Score score2){
-        return this.getScore() - score2.getScore();
-    }
-
     public void resetScore(){
         this.m_score = 0;
     }

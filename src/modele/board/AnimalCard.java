@@ -1,5 +1,7 @@
 package modele.board;
 
+import java.util.Optional;
+
 public class AnimalCard extends Card {
     private int m_attackPoints;
     private int m_bloodCost;
@@ -40,5 +42,10 @@ public class AnimalCard extends Card {
         lines[5] = "|           |";
         lines[6] = "*-----------*";
         return lines;
+    }
+
+    @Override
+    public Optional<AnimalCard> isAnimal() {
+        return Optional.of(this);
     }
 }
