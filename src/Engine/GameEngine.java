@@ -61,6 +61,8 @@ public class GameEngine {
     }
         private void round () {
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
+                playerTurn();
+                ///inserer tour IA
 
             }
         }
@@ -77,13 +79,14 @@ public class GameEngine {
                 if(card.getBloodCost() > 0){
 
                 } else if (card.getBoneCost() > 0) {
-
+                    placeCradBones(card,2,m_input.getIndexSlot());
                 }
                 else {
                     placeCard(card,2,m_input.getIndexSlot());
                 }
                 m_input.askChoice(m_player.getHand().getMaxIndex());
             }
+            attackPhase(2,1,true);
 
         }
         private void placeCard(AnimalCard card,int row,int col){
