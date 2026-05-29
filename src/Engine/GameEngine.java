@@ -8,6 +8,7 @@ import modele.board.Slot;
 import modele.player.*;
 import vue.GameView;
 import vue.InputHandeler;
+import vue.UserChoice;
 
 import java.util.Optional;
 
@@ -61,6 +62,47 @@ public class GameEngine {
         private void round () {
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
 
+            }
+        }
+
+        private void playerTurn(){
+            m_player.draw();
+            m_gameView.displayBoard(m_board,m_score);
+            m_gameView.displayDeck(m_player.getDeck());
+            m_gameView.displayHand(m_player);
+            m_input.askChoice(m_player.getHand().getMaxIndex());
+
+            while (m_input.getChoice() != UserChoice.PASSER) {
+                AnimalCard card = m_player.getHand().getCard(m_input.getIndexCard());
+                if(card.getBloodCost() > 0){
+
+                } else if (card.getBoneCost() > 0) {
+
+                }
+                else {
+                    placeCard(card,2,m_input.getIndexSlot());
+                }
+                m_input.askChoice(m_player.getHand().getMaxIndex());
+            }
+
+        }
+        private void placeCard(AnimalCard card,int row,int col){
+            if(m_board.getSlot(row,col).isEmpty()) {
+                m_board.addCard(card, row, col);
+            }
+            else {
+                System.out.println("slot deja pris");
+            }
+        }
+        private void placeCradBones(AnimalCard card,int row,int col){
+            if(!m_board.getSlot(row,col).isEmpty()){
+                System.out.println("slot deja pris");
+            }
+            if(m_player.getBones() < card.getBoneCost()){
+                System.out.println("pas assez d'os");
+            }
+            else {
+                m_board.addCard(card, row, col);
             }
         }
 

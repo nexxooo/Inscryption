@@ -31,4 +31,13 @@ public abstract class Player {
     public Hand getHand(){
         return m_hand;
     }
+
+    public void draw(){
+        Optional<AnimalCard> card = m_deck.getTopCard();
+        card.ifPresent(animalCard -> m_hand.addCard(animalCard));
+    }
+
+    public Deck getDeck(){
+        return m_deck;
+    }
 }

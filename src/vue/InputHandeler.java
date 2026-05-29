@@ -49,9 +49,6 @@ public class InputHandeler {
             case "fin":
                 setChoice(UserChoice.PASSER);
                 break;
-            case "piocher":
-                setChoice(UserChoice.PIOCHER);
-                break;
             case "placer":
                 setChoice(UserChoice.PLACER);
                 if(splite.length != 3 ){
