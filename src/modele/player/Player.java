@@ -37,6 +37,14 @@ public abstract class Player {
         card.ifPresent(animalCard -> m_hand.addCard(animalCard));
     }
 
+    public Graves getGraves(){
+        return m_graves;
+    }
+
+    public void spendBones(int amount) {
+        m_graves.spendBones(amount);
+    }
+
     public Deck getDeck(){
         return m_deck;
     }

@@ -33,8 +33,7 @@ public class Slot {
             return res;
         }
         else {
-            return getASCII();
-
+            return m_currentCard.getCardAscii();
         }
 
     }

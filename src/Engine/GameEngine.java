@@ -10,6 +10,7 @@ import vue.GameView;
 import vue.InputHandeler;
 import vue.UserChoice;
 
+import java.util.List;
 import java.util.Optional;
 
 public class GameEngine {
@@ -69,6 +70,7 @@ public class GameEngine {
 
         private void playerTurn(){
             m_player.draw();
+            m_gameView.Clear();
             m_gameView.displayBoard(m_board,m_score);
             m_gameView.displayDeck(m_player.getDeck());
             m_gameView.displayHand(m_player);
@@ -77,6 +79,15 @@ public class GameEngine {
             while (m_input.getChoice() != UserChoice.PASSER) {
                 AnimalCard card = m_player.getHand().getCard(m_input.getIndexCard());
                 if(card.getBloodCost() > 0){
+                    Optional<List<Integer>> optsacrifice = m_input.askSacrifices(card.getBloodCost(),m_board);
+                    if (optsacrifice.isPresent()) {
+                        List<Integer> sacrifice = optsacrifice.get();
+                        for(Integer i : sacrifice){
+                            m_board.getSlot(Board.ROW_PLAYER,i).removeCard();
+                        }
+                        m_board.getSlot(Board.ROW_PLAYER,m_input.getIndexCard()).setCard(card);
+
+                    }
 
                 } else if (card.getBoneCost() > 0) {
                     placeCradBones(card,2,m_input.getIndexSlot());

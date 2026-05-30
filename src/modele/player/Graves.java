@@ -13,7 +13,11 @@ public class Graves extends ContainerCard{
     @Override
     public void addCard(AnimalCard card) {
         super.addCard(card);
-        m_bones += card.getBoneCost();
+        m_bones += 1;
+    }
+
+    public void spendBones(int amount) {
+        m_bones = Math.max(0, m_bones - amount);
     }
 
     public int getBones() {return m_bones;}
@@ -21,8 +25,8 @@ public class Graves extends ContainerCard{
     public void refillDeck(Deck deck){
         for(AnimalCard card : m_cards){
             deck.addCard(card);
-            m_cards.remove(card);
         }
+        m_cards.clear();
     }
 
 }
