@@ -42,7 +42,7 @@ public class GameEngine {
                     AnimalCard attackerAnimal = optAttacker.get();
                     int damage = attackerAnimal.getAttackPoints();
 
-                    if (damage > 0) {
+
                         if (defenderSlot.isEmpty() || attackerAnimal.isFlying()) {
                             int delta = isPlayerAttack ? damage : -damage;
                             m_score.addScore(delta);
@@ -59,7 +59,7 @@ public class GameEngine {
                 }
             }
         }
-    }
+
         private void round () {
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
                 playerTurn();
