@@ -1,5 +1,9 @@
 package modele.board;
 
+import modele.player.Deck;
+
+import java.util.Optional;
+
 public class Board {
 
     private Slot[][] m_grid;
@@ -38,11 +42,24 @@ public class Board {
         }
         return m_grid[row][col];
     }
-    public void AdvanceRow(){
+    public void advanceRow(){
         for(int i = 0;i<4;i++){
             if(m_grid[ROW_OPPONENT_ACTIVE][i].isEmpty() && !m_grid[ROW_OPPONENT_QUEUE][i].isEmpty()){
                 m_grid[ROW_OPPONENT_ACTIVE][i].setCard(m_grid[ROW_OPPONENT_QUEUE][i].getCard());
                 m_grid[ROW_OPPONENT_QUEUE][i].removeCard();
+            }
+        }
+    }
+
+    public void clearBoard(Deck deck){
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 4; col++) {
+                Slot slot = getSlot(row, col);
+                if(!slot.isEmpty()) {
+                    Optional<AnimalCard> optAnimal = slot.getCard().isAnimal();
+                    optAnimal.ifPresent(deck::addCard);
+                    slot.removeCard();
+                }
             }
         }
     }

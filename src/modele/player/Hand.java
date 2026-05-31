@@ -24,4 +24,8 @@ public class Hand extends ContainerCard {
 
     }
 
+    public AnimalCard getCard(int index) {
+        return m_cards.get(index);
+    }
+
 }

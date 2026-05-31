@@ -1,5 +1,11 @@
 package vue;
 
+import modele.board.Board;
+import modele.board.Slot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class InputHandeler {
@@ -48,9 +54,6 @@ public class InputHandeler {
         switch (splite[0].toLowerCase()){
             case "fin":
                 setChoice(UserChoice.PASSER);
-                break;
-            case "piocher":
-                setChoice(UserChoice.PIOCHER);
                 break;
             case "placer":
                 setChoice(UserChoice.PLACER);
@@ -109,5 +112,44 @@ public class InputHandeler {
         catch (Exception e) {
             return -1;
         }
+    }
+    public Optional<List<Integer>> askSacrifices(int bloodRequired, Board board) {
+        Scanner scanner = new Scanner(System.in);
+        List<Integer> sacrifices = new ArrayList<>();
+        int bloodCount = 0;
+        System.out.println("Vous devez sacrifier " + bloodRequired + " créatures.");
+        while (bloodCount < bloodRequired) {
+            System.out.println("Entrez l'index à sacrifier (ou cancel pour annuler) :");
+            String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("cancel")) {
+                return Optional.empty();
+            } else {
+                int status = getIndexSlot(input);
+
+                if (status == -1) {
+                    System.out.println("Erreur : Case invalide.");
+                    continue;
+                }
+                int index = getIndexSlot();
+                Slot slot = board.getSlot(Board.ROW_PLAYER, index);
+                if (slot.isEmpty()) {
+                    System.out.println("Erreur : Cette case est vide !");
+                    continue;
+                }
+                if (slot.getCard().isAnimal().isEmpty()) {
+                    System.out.println("Erreur : Vous ne pouvez sacrifier que des animaux !");
+                    continue;
+                }
+                if (sacrifices.contains(index)) {
+                    System.out.println("Erreur : Vous avez déjà sélectionné cette carte !");
+                    continue;
+                }
+                sacrifices.add(index);
+                bloodCount++;
+                System.out.println("Sacrifice accepté (" + bloodCount + "/" + bloodRequired + ").");
+            }
+        }
+        return Optional.of(sacrifices);
     }
 }

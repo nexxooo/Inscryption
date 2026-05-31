@@ -13,6 +13,7 @@ public class Main
        Board b = new Board();
     GameView view = new GameView();
         Score score = new Score();
+        view.Clear();
 
        view.displayBoard(b,score);
         Deck d = new Deck();

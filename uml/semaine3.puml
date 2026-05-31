@@ -1,0 +1,214 @@
+@startuml
+
+package "modele.board" {
+    abstract class Card {
+        - m_name : String
+        - m_healthPoints : int
+        - m_maxHealth : int
+        + Card(name: String, healthPoints: int, maxHealth: int)
+        + takeDamage(amount: int) : void
+        + isDead() : boolean
+        + getNom() : String
+        + getMaxHealth() : int
+        + getHealthPoints() : int
+        + {abstract} getCardAscii() : String[]
+        + getAttackPoints() : int
+        + isFlying() : boolean
+        + isAnimal() : Optional<AnimalCard>
+
+    }
+
+    class AnimalCard {
+        - m_attackPoints : int
+        - m_bloodCost : int
+        - m_boneCost : int
+        - isFlying : Boolean
+        + AnimalCard(name: String, hp: int, maxhp: int, att: int, blo: int, bone: int, fly: boolean)
+        + getAttackPoints() : int
+        + getBloodCost() : int
+        + isFlying() : boolean
+        + getBoneCost() : int
+        + toString() : String
+        + getCardAscii() : String[]
+        + isAnimal() : Optional<AnimalCard>
+    }
+
+    class ObstacleCard {
+        + ObstacleCard(name: String, hp: int, maxhp: int)
+        + getCardAscii() : String[]
+    }
+
+    class Slot {
+        - m_currentCard : Card
+        + Slot()
+        + isEmpty() : boolean
+        + getCard() : Card
+        + setCard(c: Card) : void
+        + removeCard() : void
+        + getASCII() : String[]
+    }
+
+    class Board {
+        + {static} ROW_OPPONENT_QUEUE : int = 0
+        + {static} ROW_OPPONENT_ACTIVE : int = 1
+        + {static} ROW_PLAYER : int = 2
+        - m_grid : Slot[][]
+        + Board()
+        + addCard(c: Card, row: int, col: int) : boolean
+        + getSlot(row: int, col: int) : Slot
+        + advanceRow() : void
+        + clearBoard(deck: Deck) : void
+    }
+
+    Card <|-- AnimalCard
+    Card <|-- ObstacleCard
+    Slot o--> Card : m_currentCard
+    Board *--> Slot : m_grid
+}
+
+package "modele.player" {
+    abstract class ContainerCard {
+        # m_cards : List<AnimalCard>
+        + ContainerCard()
+        + addCard(card: AnimalCard) : void
+        + getCardCount() : int
+        + isEmpty() : boolean
+    }
+
+    class Hand {
+        + Hand()
+        + getMaxIndex() : int
+        + removeCard(index: int) : void
+        + getListAsString() : String
+        + getCard(index: int) : AnimalCard
+    }
+
+    class Deck {
+        + Deck()
+        + getTopCard() : Optional<AnimalCard>
+        + shuffle() : void
+    }
+
+    class Graves {
+        - m_bones : int
+        + Graves()
+        + addCard(card: AnimalCard) : void
+        + spendBones(amount: int) : void
+        + getBones() : int
+        + refillDeck(deck: Deck) : void
+    }
+
+    abstract class Player {
+        - m_hand : Hand
+        - m_deck : Deck
+        - m_graves : Graves
+        + Player()
+        + Draw() : void
+        + getBones() : int
+        + getHandAsString() : String
+        + getHand() : Hand
+        + draw() : void
+        + getGraves() : Graves
+        + spendBones(amount: int) : void
+        + getDeck() : Deck
+    }
+
+    class HumanPlayer {
+        + HumanPlayer()
+    }
+
+    class OpponentAI {
+        - queue : List<Card>
+        + OpponentAI(queue: List<Card>)
+        + getIntendedPlays() : List<Card>
+    }
+
+    class CardFactory {
+    }
+
+    ContainerCard <|-- Hand
+    ContainerCard <|-- Deck
+    ContainerCard <|-- Graves
+    Player *--> Hand : m_hand
+    Player *--> Deck : m_deck
+    Player *--> Graves : m_graves
+    ContainerCard o--> AnimalCard : contient
+    Player <|-- HumanPlayer
+}
+
+package "modele.score" {
+    class Score {
+        - score : int
+        + Score()
+        + addWeight(amount: int) : int
+        + checkVictory() : boolean
+        + getScore() : int
+    }
+}
+
+
+package "vue" {
+    enum UserChoice {
+        PASSER
+        PLACER
+    }
+
+    class GameView {
+        + GameView()
+        - displayLine(b: Board, ligne: int, sc: ModeleScore) : void
+        + displayBoard(b: Board, sc: ModeleScore) : void
+        + displayHand(p: Player) : void
+        + getSCore(sc: ModeleScore) : String[]
+        + displayDeck(deck: Deck) : void
+        + Clear() : void
+    }
+
+    class InputHandeler {
+        - m_choice : UserChoice
+        - m_indexCard : int
+        - m_indexSlot : int
+        - scanner : Scanner
+        + InputHandeler()
+        + getChoice() : UserChoice
+        - setChoice(m_choice: UserChoice) : void
+        + getIndexCard() : int
+        - setIndexCard(m_indexCard: int) : void
+        + getIndexSlot() : int
+        - setIndexSlot(m_indexSlot: int) : void
+        + askChoice(maxCardIndex: int) : void
+        - getIndexSlot(slot: String) : int
+        - getCardIndex(card: String[], maxCardIndex: int) : int
+        + askSacrifices(bloodRequired: int, board: Board) : Optional<List<Integer>>
+    }
+
+    InputHandeler --> UserChoice : m_choice
+}
+
+package "Engine" {
+    class GameEngine {
+        - m_player : HumanPlayer
+        - m_opponentAI : OpponentAI
+        - m_board : Board
+        - m_score : ModeleScore
+        - m_gameView : GameView
+        - m_input : InputHandeler
+        + GameEngine(m_player: HumanPlayer, m_score: ModeleScore, m_gameView: GameView, m_input: InputHandeler)
+        - attackPhase(indexAttackRow: int, indexDefenseRow: int, isPlayerAttack: boolean) : void
+        - round() : void
+        - playerTurn() : void
+        - placeCard(card: AnimalCard, row: int, col: int) : void
+        - placeCradBones(card: AnimalCard, row: int, col: int) : void
+    }
+}
+
+class Main {
+    + {static} main(args: String[]) : void
+}
+
+Engine.GameEngine *--> modele.player.HumanPlayer : m_player
+Engine.GameEngine *--> modele.player.OpponentAI : m_opponentAI
+Engine.GameEngine *--> modele.board.Board : m_board
+Engine.GameEngine *--> vue.GameView : m_gameView
+Engine.GameEngine *--> vue.InputHandeler : m_input
+
+@enduml

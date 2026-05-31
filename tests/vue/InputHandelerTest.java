@@ -32,14 +32,7 @@ public class InputHandelerTest {
         assertEquals(UserChoice.PASSER, handler.getChoice(), "Le choix devrait être PASSER");
     }
 
-    @Test
-    public void testSaisiePiocher() {
-        InputHandeler handler = createHandlerWithInput("PIochEr\n");
 
-        handler.askChoice(3);
-
-        assertEquals(UserChoice.PIOCHER, handler.getChoice(), "Le choix devrait être PIOCHER");
-    }
 
     @Test
     public void testSaisiePlacerValide() {
