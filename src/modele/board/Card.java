@@ -6,10 +6,10 @@ public abstract class Card {
     private String m_name;
     private int m_healthPoints;
     private int m_maxHealth;
-    public Card(String name, int healthPoints, int maxHealth) {
+    public Card(String name, int healthPoints) {
         this.m_name = name;
         this.m_healthPoints = healthPoints;
-        this.m_maxHealth = maxHealth;
+        this.m_maxHealth = healthPoints;
     }
 
     public void takeDamage(int amount) {
