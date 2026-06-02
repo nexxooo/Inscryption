@@ -2,9 +2,7 @@ package modele.board;
 
 import modele.player.Deck;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class CardFactory {
     public CardFactory() {
@@ -60,5 +58,24 @@ public class CardFactory {
     public static void initializeDeck(Deck deck){
         addMultipleCard("ecureuil",8,deck);
         addMultipleCard(getRandomAnimalName(),7,deck);
+    }
+
+    public static AnimalCard[] createCardChoice(){
+        AnimalCard[] cards = new AnimalCard[3];
+        for (int i = 0; i < 3; i++) {
+            Optional<AnimalCard> optcard = createAnimalCard(getRandomAnimalName());
+            if (optcard.isPresent()) {
+                cards[i] = optcard.get();
+            }
+        }
+        return cards;
+    }
+
+    public static ObstacleCard createRandomObstacle(){
+        List<String> lstName = List.of("Sapin", "Rocher");
+        List<Integer> lstPv = List.of(3,5);
+        Random rand = new Random();
+        int r1 = rand.nextInt(lstName.size());
+        return new ObstacleCard(lstName.get(r1),lstPv.get(r1));
     }
 }
