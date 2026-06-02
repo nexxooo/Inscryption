@@ -1,8 +1,8 @@
 package modele.board;
 
 public class ObstacleCard extends Card {
-    public ObstacleCard(String name, int hp, int maxhp) {
-        super(name, hp, maxhp);
+    public ObstacleCard(String name, int hp) {
+        super(name, hp);
     }
     @Override
     public String[] getCardAscii() {

@@ -7,8 +7,8 @@ public class AnimalCard extends Card {
     private int m_bloodCost;
     private int m_boneCost;
     private Boolean isFlying;
-    public AnimalCard (String name,int hp, int maxhp, int att, int blo, int bone, boolean fly){
-        super(name, hp, maxhp);
+    public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly){
+        super(name, hp);
         m_attackPoints = att;
         m_bloodCost = blo;
         m_boneCost = bone;
