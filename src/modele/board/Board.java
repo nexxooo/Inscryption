@@ -52,17 +52,40 @@ public class Board {
     }
 
     public void clearBoard(Deck deck){
-        for (int row = 0; row < 3; row++) {
+       clearPlayerRow(deck);
+       clearAiRow();
+    }
+
+
+    private void clearPlayerRow(Deck deck){
+        for(int i =  0;i<4;i++){
+            Slot slot = getSlot(ROW_PLAYER, i);
+            if(!slot.isEmpty()) {
+                Optional<AnimalCard> optAnimal = slot.getCard().isAnimal();
+                if(optAnimal.isPresent()){
+                    AnimalCard card = optAnimal.get();
+                    card.reHeal();
+                    deck.addCard(card);
+                }
+                slot.removeCard();
+            }
+        }
+    }
+
+    private void clearAiRow(){
+        for (int row = 0; row < 2; row++) {
             for (int col = 0; col < 4; col++) {
                 Slot slot = getSlot(row, col);
                 if(!slot.isEmpty()) {
                     Optional<AnimalCard> optAnimal = slot.getCard().isAnimal();
-                    optAnimal.ifPresent(deck::addCard);
                     slot.removeCard();
                 }
             }
         }
+
     }
+
+
 
 
 }

@@ -42,4 +42,8 @@ public abstract class Card {
     public Optional<AnimalCard> isAnimal(){
         return Optional.empty();
     }
+
+    public void reHeal(){
+        m_healthPoints = m_maxHealth;
+    }
 }
