@@ -7,6 +7,7 @@ import vue.GameView;
 import vue.InputHandeler;
 import vue.UserChoice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -24,6 +25,14 @@ public class GameEngine {
         this.m_score = m_score;
         this.m_gameView = m_gameView;
         this.m_input = m_input;
+
+        List<Card> queueEcureuils = new ArrayList<>();
+        for (int i = 0; i < 50; i++)
+        {
+            CardFactory.createAnimalCard("ecureil").ifPresent(queueEcureuils::add);
+
+        }
+        this.m_opponentAI = new OpponentAI(queueEcureuils);
     }
 
     private void attackPhase(int indexAttackRow, int indexDefenseRow, boolean isPlayerAttack) {
@@ -60,10 +69,12 @@ public class GameEngine {
 
         private void round () {
             CardFactory.initializeDeck(m_player.getDeck());
+
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
                 playerTurn();
-                ///inserer tour IA
-
+                m_board.advanceRow();
+                attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);
+                m_opponentAI.playTurn(m_board);
             }
 
         }
