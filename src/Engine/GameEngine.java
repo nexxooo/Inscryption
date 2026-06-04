@@ -1,17 +1,16 @@
 package Engine;
 
 import modele.Score;
-import modele.board.AnimalCard;
-import modele.board.Board;
-import modele.board.Card;
-import modele.board.Slot;
+import modele.board.*;
 import modele.player.*;
 import vue.GameView;
 import vue.InputHandeler;
 import vue.UserChoice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class GameEngine {
     private HumanPlayer m_player;
@@ -26,6 +25,14 @@ public class GameEngine {
         this.m_score = m_score;
         this.m_gameView = m_gameView;
         this.m_input = m_input;
+
+        List<Card> queueEcureuils = new ArrayList<>();
+        for (int i = 0; i < 50; i++)
+        {
+            CardFactory.createAnimalCard("ecureil").ifPresent(queueEcureuils::add);
+
+        }
+        this.m_opponentAI = new OpponentAI(queueEcureuils);
     }
 
     private void attackPhase(int indexAttackRow, int indexDefenseRow, boolean isPlayerAttack) {
@@ -61,11 +68,15 @@ public class GameEngine {
         }
 
         private void round () {
+            CardFactory.initializeDeck(m_player.getDeck());
+
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
                 playerTurn();
-                ///inserer tour IA
-
+                m_board.advanceRow();
+                attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);
+                m_opponentAI.playTurn(m_board);
             }
+
         }
 
         private void playerTurn(){
@@ -117,6 +128,21 @@ public class GameEngine {
             }
             else {
                 m_board.addCard(card, row, col);
+            }
+        }
+
+        private void initBoard(){
+            m_board = new Board();
+            Random rand = new Random();
+            for (int i=0; i< 4;i++){
+                int r1 = rand.nextInt(4); //une chance sur quatre d'avoir un obstacle
+                int r2 = rand.nextInt(4);
+                if (r1 == 1){
+                    m_board.getSlot(Board.ROW_PLAYER,i).setCard(CardFactory.createRandomObstacle());
+                }
+                if(r2 ==1){
+                    m_board.getSlot(Board.ROW_OPPONENT_ACTIVE,i).setCard(CardFactory.createRandomObstacle());
+                }
             }
         }
 

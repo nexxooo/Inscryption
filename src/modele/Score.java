@@ -18,4 +18,8 @@ public class Score {
     public void resetScore(){
         this.m_score = 0;
     }
+
+    public boolean checkVictory(){
+        return this.m_score >= 5 || this.m_score <= -5;
+    }
 }

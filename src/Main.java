@@ -19,8 +19,8 @@ public class Main
         Deck d = new Deck();
         view.displayDeck(d);
 
-        AnimalCard cd1 = new AnimalCard("test",10,10,10,0,0,false);
-        AnimalCard cd2 = new AnimalCard("test",10,10,10,0,0,false);
+        AnimalCard cd1 = new AnimalCard("test",10,10,10,0,false);
+        AnimalCard cd2 = new AnimalCard("test",10,10,10,0,false);
         HumanPlayer p1 = new HumanPlayer();
         p1.getHand().addCard(cd1);
         p1.getHand().addCard(cd2);
