@@ -56,9 +56,15 @@ public class GameEngine {
                         } else {
 
                             Card defenderCard = defenderSlot.getCard();
+                            int defenderHealth = defenderCard.getHealthPoints();
                             defenderCard.takeDamage(damage);
 
                             if (defenderCard.isDead()) {
+                                int excess = damage - defenderHealth;
+                                if (excess > 0) {
+                                    int delta = isPlayerAttack ? excess : -excess;
+                                    m_score.addScore(delta);
+                                }
                                 defenderSlot.removeCard();
                             }
                         }
@@ -69,13 +75,14 @@ public class GameEngine {
 
         private void round () {
             CardFactory.initializeDeck(m_player.getDeck());
-
+            initBoard();
             while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
                 playerTurn();
                 m_board.advanceRow();
                 attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);
                 m_opponentAI.playTurn(m_board);
             }
+            m_board.clearBoard(m_player.getDeck());
 
         }
 
