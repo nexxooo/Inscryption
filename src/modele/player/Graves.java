@@ -22,12 +22,7 @@ public class Graves extends ContainerCard{
 
     public int getBones() {return m_bones;}
 
-    public void refillDeck(Deck deck){
-        for(AnimalCard card : m_cards){
-            deck.addCard(card);
-        }
-        m_cards.clear();
-    }
+
 
     @Override
     public void clear() {

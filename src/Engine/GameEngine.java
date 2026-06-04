@@ -81,14 +81,20 @@ public class GameEngine {
             int playerWins = 0;
             int opponentWins = 0;
 
+            // Initialiser le deck une seule fois au début de la partie
+            CardFactory.initializeDeck(m_player.getDeck());
+
             for (int i = 1; i <= 3; i++) {
                 System.out.println("==================================");
                 System.out.println("        DEBUT DU ROUND " + i);
                 System.out.println("==================================");
 
-                m_player.getHand().clear();
-                m_player.getDeck().clear();
-                m_player.getGraves().clear();
+                // Remettre toutes les cartes de la main et du cimetière dans le deck
+                m_player.getHand().refillDeck(m_player.getDeck());
+                m_player.getGraves().refillDeck(m_player.getDeck());
+                m_player.getGraves().clear(); // réinitialiser le nombre d'os à 0
+                m_player.getDeck().shuffle();
+
                 m_score.resetScore();
 
                 round();
@@ -107,14 +113,13 @@ public class GameEngine {
             System.out.println("          FIN DE LA PARTIE        ");
             System.out.println("==================================");
             if (playerWins > opponentWins) {
-                System.out.println("🏆 Félicitations ! Vous avez gagné la partie (" + playerWins + " - " + opponentWins + ") !");
+                System.out.println("Félicitations ! Vous avez gagné la partie (" + playerWins + " - " + opponentWins + ") !");
             } else {
-                System.out.println("💀 Défaite... L'adversaire a gagné la partie (" + opponentWins + " - " + playerWins + ").");
+                System.out.println("Défaite... L'adversaire a gagné la partie (" + opponentWins + " - " + playerWins + ").");
             }
         }
 
         private void round () {
-            CardFactory.initializeDeck(m_player.getDeck());
             initBoard();
             for (int i = 0; i < 4; i++) {
                 m_player.draw();

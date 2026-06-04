@@ -58,6 +58,7 @@ public class CardFactory {
     public static void initializeDeck(Deck deck){
         addMultipleCard("ecureuil",8,deck);
         addMultipleCard(getRandomAnimalName(),7,deck);
+        deck.shuffle();
     }
 
     public static AnimalCard[] createCardChoice(){
