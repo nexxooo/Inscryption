@@ -29,7 +29,7 @@ public class GameEngine {
         List<Card> queueEcureuils = new ArrayList<>();
         for (int i = 0; i < 50; i++)
         {
-            CardFactory.createAnimalCard("ecureil").ifPresent(queueEcureuils::add);
+            CardFactory.createAnimalCard("ecureuil").ifPresent(queueEcureuils::add);
 
         }
         this.m_opponentAI = new OpponentAI(queueEcureuils);
