@@ -29,4 +29,10 @@ public class Graves extends ContainerCard{
         m_cards.clear();
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        m_bones = 0;
+    }
+
 }

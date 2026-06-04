@@ -24,4 +24,8 @@ public abstract class ContainerCard {
     public boolean isEmpty(){
         return m_cards.isEmpty();
     }
+
+    public void clear(){
+        m_cards.clear();
+    }
 }
