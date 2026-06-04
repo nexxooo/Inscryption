@@ -1,7 +1,6 @@
 package modele.player;
 
 import modele.board.AnimalCard;
-import modele.player.Graves;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 public class GravesTest {
