@@ -1,4 +1,4 @@
-package modele;
+package modele.player;
 
 import modele.board.AnimalCard;
 import modele.player.Graves;
