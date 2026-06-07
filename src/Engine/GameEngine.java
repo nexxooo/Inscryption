@@ -29,7 +29,7 @@ public class GameEngine {
         List<Card> queueEcureuils = new ArrayList<>();
         for (int i = 0; i < 50; i++)
         {
-            CardFactory.createAnimalCard("ecureil").ifPresent(queueEcureuils::add);
+            CardFactory.createAnimalCard("ecureuil").ifPresent(queueEcureuils::add);
 
         }
         this.m_opponentAI = new OpponentAI(queueEcureuils);
@@ -39,44 +39,116 @@ public class GameEngine {
         for (int i = 0; i < 4; i++) {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
+            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack);
+        }
+    }
 
-            if (!attackerSlot.isEmpty()) {
-                Card baseCard = attackerSlot.getCard();
+    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack) {
+        if (attackerSlot.isEmpty()) {
+            return;
+        }
 
-                Optional<AnimalCard> optAttacker = baseCard.isAnimal();
+        Card baseCard = attackerSlot.getCard();
+        Optional<AnimalCard> optAttacker = baseCard.isAnimal();
+        if (!optAttacker.isPresent()) {
+            return;
+        }
 
-                if (optAttacker.isPresent()) {
-                    AnimalCard attackerAnimal = optAttacker.get();
-                    int damage = attackerAnimal.getAttackPoints();
+        AnimalCard attackerAnimal = optAttacker.get();
+        int damage = attackerAnimal.getAttackPoints();
+        if (damage <= 0) {
+            return;
+        }
 
+        if (defenderSlot.isEmpty() || attackerAnimal.isFlying()) {
+            applyDirectDamage(attackerAnimal, damage, isPlayerAttack);
+        } else {
+            applyCardDamage(attackerAnimal, defenderSlot, damage, isPlayerAttack);
+        }
+    }
 
-                        if (defenderSlot.isEmpty() || attackerAnimal.isFlying()) {
-                            int delta = isPlayerAttack ? damage : -damage;
-                            m_score.addScore(delta);
-                        } else {
+    private void applyDirectDamage(AnimalCard attacker, int damage, boolean isPlayerAttack) {
+        int delta = isPlayerAttack ? damage : -damage;
+        m_score.addScore(delta);
+        String target = isPlayerAttack ? "à l'adversaire" : "au joueur";
+        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts directs " + target + ".");
+    }
 
-                            Card defenderCard = defenderSlot.getCard();
-                            int defenderHealth = defenderCard.getHealthPoints();
-                            defenderCard.takeDamage(damage);
+    private void applyCardDamage(AnimalCard attacker, Slot defenderSlot, int damage, boolean isPlayerAttack) {
+        Card defenderCard = defenderSlot.getCard();
+        int defenderHealth = defenderCard.getHealthPoints();
+        defenderCard.takeDamage(damage);
+        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
 
-                            if (defenderCard.isDead()) {
-                                int excess = damage - defenderHealth;
-                                if (excess > 0) {
-                                    int delta = isPlayerAttack ? excess : -excess;
-                                    m_score.addScore(delta);
-                                }
-                                defenderSlot.removeCard();
-                            }
-                        }
-                    }
+        if (defenderCard.isDead()) {
+            System.out.println(defenderCard.getNom() + " a été éliminé(e) !");
+            int excess = damage - defenderHealth;
+            if (excess > 0) {
+                int delta = isPlayerAttack ? excess : -excess;
+                m_score.addScore(delta);
+                String target = isPlayerAttack ? "à l'adversaire" : "au joueur";
+                System.out.println("Surplus de " + excess + " dégâts infligé " + target + ".");
+            }
+            removeDeadCard(defenderSlot, isPlayerAttack);
+        }
+    }
+
+    private void removeDeadCard(Slot slot, boolean isPlayerAttack) {
+        if (isPlayerAttack) {
+            slot.removeCard();
+        } else {
+            slot.removeCard(m_player.getGraves());
+        }
+    }
+
+        public void play() {
+            int playerWins = 0;
+            int opponentWins = 0;
+
+            // Initialiser le deck une seule fois au début de la partie
+            CardFactory.initializeDeck(m_player.getDeck());
+
+            for (int i = 1; i <= 3; i++) {
+                System.out.println("==================================");
+                System.out.println("        DEBUT DU ROUND " + i);
+                System.out.println("==================================");
+
+                // Remettre toutes les cartes de la main et du cimetière dans le deck
+                m_player.getHand().refillDeck(m_player.getDeck());
+                m_player.getGraves().refillDeck(m_player.getDeck());
+                m_player.getGraves().clear(); // réinitialiser le nombre d'os à 0
+                m_player.getDeck().shuffle();
+
+                m_score.resetScore();
+
+                round();
+
+                if (m_score.getScore() >= 5) {
+                    playerWins++;
+                    System.out.println("\nVous avez gagné le Round " + i + " !");
+                } else {
+                    opponentWins++;
+                    System.out.println("\nL'adversaire a gagné le Round " + i + " !");
                 }
+                System.out.println("Rounds gagnés - Joueur : " + playerWins + " | Adversaire : " + opponentWins + "\n");
+            }
+
+            System.out.println("==================================");
+            System.out.println("          FIN DE LA PARTIE        ");
+            System.out.println("==================================");
+            if (playerWins > opponentWins) {
+                System.out.println("Félicitations ! Vous avez gagné la partie (" + playerWins + " - " + opponentWins + ") !");
+            } else {
+                System.out.println("Défaite... L'adversaire a gagné la partie (" + opponentWins + " - " + playerWins + ").");
             }
         }
 
         private void round () {
-            CardFactory.initializeDeck(m_player.getDeck());
             initBoard();
-            while (m_score.getScore() <= 5 && m_score.getScore() >= -5) {
+            for (int i = 0; i < 4; i++) {
+                m_player.draw();
+            }
+            while (m_score.getScore() < 5 && m_score.getScore() > -5) {
                 playerTurn();
                 m_board.advanceRow();
                 attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);
@@ -101,10 +173,14 @@ public class GameEngine {
                     if (optsacrifice.isPresent()) {
                         List<Integer> sacrifice = optsacrifice.get();
                         for(Integer i : sacrifice){
-                            m_board.getSlot(Board.ROW_PLAYER,i).removeCard();
+                             m_board.getSlot(Board.ROW_PLAYER,i).removeCard(m_player.getGraves());
                         }
-                        m_board.getSlot(Board.ROW_PLAYER,m_input.getIndexCard()).setCard(card);
-
+                        if (m_board.getSlot(Board.ROW_PLAYER, m_input.getIndexSlot()).isEmpty()) {
+                            m_board.getSlot(Board.ROW_PLAYER,m_input.getIndexSlot()).setCard(card);
+                            m_player.getHand().removeCard(m_input.getIndexCard());
+                        } else {
+                            System.out.println("slot deja pris");
+                        }
                     }
 
                 } else if (card.getBoneCost() > 0) {
@@ -113,6 +189,11 @@ public class GameEngine {
                 else {
                     placeCard(card,2,m_input.getIndexSlot());
                 }
+
+                m_gameView.Clear();
+                m_gameView.displayBoard(m_board,m_score);
+                m_gameView.displayDeck(m_player.getDeck());
+                m_gameView.displayHand(m_player);
                 m_input.askChoice(m_player.getHand().getMaxIndex());
             }
             attackPhase(2,1,true);
@@ -121,6 +202,7 @@ public class GameEngine {
         private void placeCard(AnimalCard card,int row,int col){
             if(m_board.getSlot(row,col).isEmpty()) {
                 m_board.addCard(card, row, col);
+                m_player.getHand().removeCard(m_input.getIndexCard());
             }
             else {
                 System.out.println("slot deja pris");
@@ -129,12 +211,14 @@ public class GameEngine {
         private void placeCradBones(AnimalCard card,int row,int col){
             if(!m_board.getSlot(row,col).isEmpty()){
                 System.out.println("slot deja pris");
+                return;
             }
             if(m_player.getBones() < card.getBoneCost()){
                 System.out.println("pas assez d'os");
             }
             else {
                 m_board.addCard(card, row, col);
+                m_player.getHand().removeCard(m_input.getIndexCard());
             }
         }
 

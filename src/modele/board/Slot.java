@@ -20,6 +20,15 @@ public class Slot {
         this.m_currentCard = null;
     }
 
+    public void removeCard(modele.player.Graves graves) {
+        if (this.m_currentCard != null) {
+            if (graves != null) {
+                this.m_currentCard.isAnimal().ifPresent(graves::addCard);
+            }
+            removeCard();
+        }
+    }
+
     public String[] getASCII(){
         String[] res = new String[7];
         if(isEmpty()){

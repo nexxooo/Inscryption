@@ -24,4 +24,15 @@ public abstract class ContainerCard {
     public boolean isEmpty(){
         return m_cards.isEmpty();
     }
+
+    public void clear(){
+        m_cards.clear();
+    }
+
+    public void refillDeck(Deck deck){
+        for(AnimalCard card : m_cards){
+            deck.addCard(card);
+        }
+        m_cards.clear();
+    }
 }

@@ -12,7 +12,9 @@ public class Deck extends ContainerCard{
 
     public Optional<AnimalCard> getTopCard(){
         if(!isEmpty()){
-            return Optional.of(m_cards.getFirst());
+            Optional<AnimalCard> card= Optional.of(m_cards.getFirst());
+            m_cards.remove(0);
+            return card;
         }
         return Optional.empty();
 

@@ -42,6 +42,8 @@ public class InputHandeler {
     }
 
     public void askChoice(int maxCardIndex){
+        System.out.println("\n--- Actions possibles : 'placer <num_carte> <case>' (ex: placer 1 b2) ou 'fin' ---");
+        System.out.print("> ");
         int cardIndex;
         String input = scanner.nextLine().trim().toLowerCase();
         if(input.isEmpty()){
@@ -100,7 +102,7 @@ public class InputHandeler {
     }
     private int getCardIndex(String[] card,int maxCardIndex){
         try{
-            int cardIndex = Integer.parseInt(card[1]) -1;
+            int cardIndex = Integer.parseInt(card[1]);
             if(cardIndex > maxCardIndex ||cardIndex < 0){
                 System.out.println("Erreur: le numéro de la carte est trop grand ou petit.");
                 return -1;
