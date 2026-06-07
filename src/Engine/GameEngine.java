@@ -39,43 +39,67 @@ public class GameEngine {
         for (int i = 0; i < 4; i++) {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
-
-            if (!attackerSlot.isEmpty()) {
-                Card baseCard = attackerSlot.getCard();
-
-                Optional<AnimalCard> optAttacker = baseCard.isAnimal();
-
-                if (optAttacker.isPresent()) {
-                    AnimalCard attackerAnimal = optAttacker.get();
-                    int damage = attackerAnimal.getAttackPoints();
-
-
-                        if (defenderSlot.isEmpty() || attackerAnimal.isFlying()) {
-                            int delta = isPlayerAttack ? damage : -damage;
-                            m_score.addScore(delta);
-                        } else {
-
-                            Card defenderCard = defenderSlot.getCard();
-                            int defenderHealth = defenderCard.getHealthPoints();
-                            defenderCard.takeDamage(damage);
-
-                            if (defenderCard.isDead()) {
-                                int excess = damage - defenderHealth;
-                                if (excess > 0) {
-                                    int delta = isPlayerAttack ? excess : -excess;
-                                    m_score.addScore(delta);
-                                }
-                                if (isPlayerAttack) {
-                                    defenderSlot.removeCard();
-                                } else {
-                                    defenderSlot.removeCard(m_player.getGraves());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack);
         }
+    }
+
+    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack) {
+        if (attackerSlot.isEmpty()) {
+            return;
+        }
+
+        Card baseCard = attackerSlot.getCard();
+        Optional<AnimalCard> optAttacker = baseCard.isAnimal();
+        if (!optAttacker.isPresent()) {
+            return;
+        }
+
+        AnimalCard attackerAnimal = optAttacker.get();
+        int damage = attackerAnimal.getAttackPoints();
+        if (damage <= 0) {
+            return;
+        }
+
+        if (defenderSlot.isEmpty() || attackerAnimal.isFlying()) {
+            applyDirectDamage(attackerAnimal, damage, isPlayerAttack);
+        } else {
+            applyCardDamage(attackerAnimal, defenderSlot, damage, isPlayerAttack);
+        }
+    }
+
+    private void applyDirectDamage(AnimalCard attacker, int damage, boolean isPlayerAttack) {
+        int delta = isPlayerAttack ? damage : -damage;
+        m_score.addScore(delta);
+        String target = isPlayerAttack ? "à l'adversaire" : "au joueur";
+        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts directs " + target + ".");
+    }
+
+    private void applyCardDamage(AnimalCard attacker, Slot defenderSlot, int damage, boolean isPlayerAttack) {
+        Card defenderCard = defenderSlot.getCard();
+        int defenderHealth = defenderCard.getHealthPoints();
+        defenderCard.takeDamage(damage);
+        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
+
+        if (defenderCard.isDead()) {
+            System.out.println(defenderCard.getNom() + " a été éliminé(e) !");
+            int excess = damage - defenderHealth;
+            if (excess > 0) {
+                int delta = isPlayerAttack ? excess : -excess;
+                m_score.addScore(delta);
+                String target = isPlayerAttack ? "à l'adversaire" : "au joueur";
+                System.out.println("Surplus de " + excess + " dégâts infligé " + target + ".");
+            }
+            removeDeadCard(defenderSlot, isPlayerAttack);
+        }
+    }
+
+    private void removeDeadCard(Slot slot, boolean isPlayerAttack) {
+        if (isPlayerAttack) {
+            slot.removeCard();
+        } else {
+            slot.removeCard(m_player.getGraves());
+        }
+    }
 
         public void play() {
             int playerWins = 0;
