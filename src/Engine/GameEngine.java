@@ -1,5 +1,6 @@
 package Engine;
 
+import modele.Power.Power;
 import modele.Score;
 import modele.board.*;
 import modele.player.*;
@@ -48,6 +49,7 @@ public class GameEngine {
             return;
         }
 
+
         Card baseCard = attackerSlot.getCard();
         Optional<AnimalCard> optAttacker = baseCard.isAnimal();
         if (!optAttacker.isPresent()) {
@@ -55,6 +57,9 @@ public class GameEngine {
         }
 
         AnimalCard attackerAnimal = optAttacker.get();
+        for(Power power : attackerAnimal.getPower()) {
+            power.onDebut(attackerSlot);
+        }
         int damage = attackerAnimal.getAttackPoints();
         if (damage <= 0) {
             return;

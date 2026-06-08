@@ -1,5 +1,8 @@
 package modele.board;
 
+import modele.Power.Power;
+
+import java.util.List;
 import java.util.Optional;
 
 public class AnimalCard extends Card {
@@ -7,6 +10,7 @@ public class AnimalCard extends Card {
     private int m_bloodCost;
     private int m_boneCost;
     private Boolean isFlying;
+    private List<Power> m_power;
     public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly){
         super(name, hp);
         m_attackPoints = att;
@@ -14,6 +18,15 @@ public class AnimalCard extends Card {
         m_boneCost = bone;
         isFlying = fly;
     }
+    public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly,List<Power> power){
+        super(name, hp);
+        m_attackPoints = att;
+        m_bloodCost = blo;
+        m_boneCost = bone;
+        isFlying = fly;
+        m_power = power;
+    }
+
     @Override
     public int getAttackPoints(){
         return m_attackPoints;
@@ -47,5 +60,9 @@ public class AnimalCard extends Card {
     @Override
     public Optional<AnimalCard> isAnimal() {
         return Optional.of(this);
+    }
+
+    public  List<Power> getPower() {
+        return m_power;
     }
 }
