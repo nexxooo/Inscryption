@@ -178,7 +178,11 @@ public class GameEngine {
                     if (optsacrifice.isPresent()) {
                         List<Integer> sacrifice = optsacrifice.get();
                         for(Integer i : sacrifice){
-                             m_board.getSlot(Board.ROW_PLAYER,i).removeCard(m_player.getGraves());
+                            Optional<AnimalCard> optcards = m_board.getSlot(Board.ROW_PLAYER,i).getCard().isAnimal();
+                            AnimalCard cards = optcards.get();
+                            if(!cards.hasPower("Nombreuse Vie")) {
+                                m_board.getSlot(Board.ROW_PLAYER,i).removeCard(m_player.getGraves());
+                            }
                         }
                         if (m_board.getSlot(Board.ROW_PLAYER, m_input.getIndexSlot()).isEmpty()) {
                             m_board.getSlot(Board.ROW_PLAYER,m_input.getIndexSlot()).setCard(card);

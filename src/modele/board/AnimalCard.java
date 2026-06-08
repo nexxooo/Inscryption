@@ -65,4 +65,12 @@ public class AnimalCard extends Card {
     public  List<Power> getPower() {
         return m_power;
     }
+    public boolean hasPower(String powerName){
+        for(Power power : m_power){
+            if(power.getName().equals(powerName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
