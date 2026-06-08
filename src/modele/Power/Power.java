@@ -1,5 +1,7 @@
 package modele.Power;
 
+import modele.board.AnimalCard;
+import modele.board.Board;
 import modele.board.Slot;
 
 public abstract  class Power {
@@ -13,4 +15,5 @@ public abstract  class Power {
     }
 
     public void onDebut(Slot slot) {}
+    public void onAttack(AnimalCard attacker, int currentRow, int currentCol, Board board){}
 }

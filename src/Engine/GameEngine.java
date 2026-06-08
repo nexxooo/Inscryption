@@ -40,16 +40,14 @@ public class GameEngine {
         for (int i = 0; i < 4; i++) {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
-            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack);
+            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack,i);
         }
     }
 
-    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack) {
+    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack,int col) {
         if (attackerSlot.isEmpty()) {
             return;
         }
-
-
         Card baseCard = attackerSlot.getCard();
         Optional<AnimalCard> optAttacker = baseCard.isAnimal();
         if (!optAttacker.isPresent()) {
@@ -69,6 +67,10 @@ public class GameEngine {
             applyDirectDamage(attackerAnimal, damage, isPlayerAttack);
         } else {
             applyCardDamage(attackerAnimal, defenderSlot, damage, isPlayerAttack);
+        }
+        int row = isPlayerAttack ? 2:1;
+        for (Power p : attackerAnimal.getPower()) {
+            p.onAttack(attackerAnimal, row, col, m_board);
         }
     }
 
