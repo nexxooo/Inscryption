@@ -90,6 +90,7 @@ public class InputHandeler {
                 }
                 break;
             default:
+                System.out.println("\u001B[31mErreur: commande inconnue\u001B[0m");
                 askChoice(maxCardIndex);
                 return;
         }
