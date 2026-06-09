@@ -24,7 +24,7 @@ public class Coureur extends Power {
             board.getSlot(currentRow, currentCol).removeCard();
             System.out.println(attacker.getNom() + " s'est déplacé vers la gauche.");
         }
-        // 3. Ne rien faire si les deux côtés sont bloqués
+
     }
 
 }

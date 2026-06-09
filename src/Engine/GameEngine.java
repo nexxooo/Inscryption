@@ -55,9 +55,6 @@ public class GameEngine {
         }
 
         AnimalCard attackerAnimal = optAttacker.get();
-        for(Power p : attackerAnimal.getPower()){
-            p.onAttack(attackerAnimal,defenderSlot.getCard());
-        }
         for(Power power : attackerAnimal.getPower()) {
             power.onDebut(attackerSlot);
         }
@@ -93,8 +90,14 @@ public class GameEngine {
     private void applyCardDamage(AnimalCard attacker, Slot defenderSlot, int damage, boolean isPlayerAttack) {
         Card defenderCard = defenderSlot.getCard();
         int defenderHealth = defenderCard.getHealthPoints();
-        defenderCard.takeDamage(damage);
-        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
+        for(Power p : attacker.getPower()){
+            damage = p.modifyDamage(attacker,defenderSlot.getCard(),damage);
+
+        }
+        if(!defenderCard.isDead()){
+            defenderCard.takeDamage(damage);
+            System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
+        }
 
         if (defenderCard.isDead()) {
             System.out.println(defenderCard.getNom() + " a été éliminé(e) !");
