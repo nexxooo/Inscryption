@@ -163,7 +163,8 @@ public class GameEngine {
                 }
                 System.out.println("Rounds gagnés - Joueur : " + playerWins + " | Adversaire : " + opponentWins + "\n");
 
-                if(i ==2){
+                if(i == 2){
+                    chooseNewCard();
                     Stone();
                 }
             }
@@ -178,22 +179,37 @@ public class GameEngine {
                 System.out.println("Défaite... L'adversaire a gagné la partie (" + opponentWins + " - " + playerWins + ").");
             }
         }
+
+    private void chooseNewCard() {
+        m_gameView.Clear();
+        AnimalCard[] choices = CardFactory.createCardChoice();
+        m_gameView.displayCardChoices(choices);
+        m_input.askCardChoice(choices.length);
+        int choiceIndex = m_input.getCardChoice();
+        AnimalCard chosenCard = choices[choiceIndex];
+        m_player.getDeck().addCard(chosenCard);
+        System.out.println("Vous avez ajouté " + chosenCard.getNom() + " à votre deck !");
+    }
+
     private void Stone(){
-        m_gameView.displayDeckList(m_player.getDeck());
-        m_input.askStoneChoice(m_player.getDeck().sizeDeck());
-        int sacrifice = m_input.getStoneChoice();
-        AnimalCard cradSacrifice = m_player.getDeck().getCard(sacrifice);
-        m_player.getDeck().deleteCard(sacrifice);
         m_gameView.Clear();
         m_gameView.displayDeckList(m_player.getDeck());
-        m_input.askStoneChoice(m_player.getDeck().sizeDeck());
+        m_input.askStoneChoice(m_player.getDeck().sizeDeck(), "Choisissez une carte à sacrifier pour récupérer son pouvoir");
+        int sacrifice = m_input.getStoneChoice();
+        AnimalCard cardSacrifice = m_player.getDeck().getCard(sacrifice);
+        
+        m_player.getDeck().deleteCard(sacrifice);
+        
+        m_gameView.Clear();
+        m_gameView.displayDeckList(m_player.getDeck());
+        m_input.askStoneChoice(m_player.getDeck().sizeDeck(), "Choisissez une carte cible pour recevoir le pouvoir");
         int cible = m_input.getStoneChoice();
 
-        AnimalCard cradCible = m_player.getDeck().getCard(cible);
-        for(Power p : cradSacrifice.getPower()){
-            cradCible.addPower(p);
+        AnimalCard cardCible = m_player.getDeck().getCard(cible);
+        for(Power p : cardSacrifice.getPower()){
+            cardCible.addPower(p);
         }
-
+        System.out.println("Pouvoir(s) transféré(s) à " + cardCible.getNom() + " !");
     }
 
         private void round () {
