@@ -1,10 +1,13 @@
 package vue;
 
 import modele.Score;
+import modele.board.AnimalCard;
 import modele.board.Board;
 import modele.board.Slot;
 import modele.player.Deck;
 import modele.player.Player;
+
+import java.util.List;
 
 public class GameView {
     public GameView() {
@@ -63,6 +66,14 @@ public class GameView {
     public void Clear(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public void displayDeckList(Deck deck){
+        List<AnimalCard> list = deck.getList();
+        for(int i = 0;i<list.size();i++){
+            System.out.println(i+" : "+list.get(i).toString());
+        }
+
     }
 
 }

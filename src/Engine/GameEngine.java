@@ -162,7 +162,12 @@ public class GameEngine {
                     System.out.println("\nL'adversaire a gagné le Round " + i + " !");
                 }
                 System.out.println("Rounds gagnés - Joueur : " + playerWins + " | Adversaire : " + opponentWins + "\n");
+
+                if(i ==2){
+                    Stone();
+                }
             }
+
 
             System.out.println("==================================");
             System.out.println("          FIN DE LA PARTIE        ");
@@ -173,6 +178,23 @@ public class GameEngine {
                 System.out.println("Défaite... L'adversaire a gagné la partie (" + opponentWins + " - " + playerWins + ").");
             }
         }
+    private void Stone(){
+        m_gameView.displayDeckList(m_player.getDeck());
+        m_input.askStoneChoice(m_player.getDeck().sizeDeck());
+        int sacrifice = m_input.getStoneChoice();
+        AnimalCard cradSacrifice = m_player.getDeck().getCard(sacrifice);
+        m_player.getDeck().deleteCard(sacrifice);
+        m_gameView.Clear();
+        m_gameView.displayDeckList(m_player.getDeck());
+        m_input.askStoneChoice(m_player.getDeck().sizeDeck());
+        int cible = m_input.getStoneChoice();
+
+        AnimalCard cradCible = m_player.getDeck().getCard(cible);
+        for(Power p : cradSacrifice.getPower()){
+            cradCible.addPower(p);
+        }
+
+    }
 
         private void round () {
             initBoard();
