@@ -41,6 +41,12 @@ public class GameEngine {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
             resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack,i);
+            try{
+                Thread.sleep(200); // pour laisser le temps de lire
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -299,8 +305,8 @@ public class GameEngine {
             m_board = new Board();
             Random rand = new Random();
             for (int i=0; i< 4;i++){
-                int r1 = rand.nextInt(4); //une chance sur quatre d'avoir un obstacle
-                int r2 = rand.nextInt(4);
+                int r1 = rand.nextInt(5); //une chance sur 8 d'avoir un obstacle
+                int r2 = rand.nextInt(5);
                 if (r1 == 1){
                     m_board.getSlot(Board.ROW_PLAYER,i).setCard(CardFactory.createRandomObstacle());
                 }
