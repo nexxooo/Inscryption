@@ -242,7 +242,7 @@ public class GameEngine {
 
         }
 
-        private void playerTurn(){
+        void playerTurn(){
             m_player.draw();
             m_gameView.Clear();
             m_gameView.displayBoard(m_board,m_score);
