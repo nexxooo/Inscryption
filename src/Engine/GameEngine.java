@@ -62,6 +62,12 @@ public class GameEngine {
             power.onDebut(attackerSlot);
         }
         int damage = attackerAnimal.getAttackPoints();
+        if (!defenderSlot.isEmpty() && defenderSlot.getCard().isAnimal().isPresent()) {
+            AnimalCard defenderAnimal = defenderSlot.getCard().isAnimal().get();
+            for (Power p : defenderAnimal.getPower()) {
+                damage = p.modifyOpponentAttack(damage);
+            }
+        }
         if (damage <= 0) {
             return;
         }

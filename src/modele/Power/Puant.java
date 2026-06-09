@@ -11,8 +11,7 @@ public class Puant extends Power{
     }
 
     @Override
-    public void onAttack(AnimalCard attacker, Card defender) {
-        Optional<AnimalCard> optdefender = defender.isAnimal();
-        optdefender.ifPresent(defenderCard -> defenderCard.setAttack(defender.getAttackPoints() - 1));
+    public int modifyOpponentAttack(int damage) {
+        return Math.max(0, damage - 1);
     }
 }

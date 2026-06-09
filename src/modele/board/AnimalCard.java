@@ -10,7 +10,7 @@ public class AnimalCard extends Card {
     private int m_bloodCost;
     private int m_boneCost;
     private Boolean isFlying;
-    private List<Power> m_power;
+    private List<Power> m_power = new java.util.ArrayList<>();
     public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly){
         super(name, hp);
         m_attackPoints = att;
