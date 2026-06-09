@@ -1,5 +1,6 @@
 package modele.board;
 
+import modele.Power.*;
 import modele.player.Deck;
 
 import java.util.*;
@@ -13,7 +14,7 @@ public class CardFactory {
             case "ecureuil":
                 return Optional.of(new AnimalCard("Ecureuil", 1, 0, 0,0,false));
             case "chat":
-                return Optional.of(new AnimalCard("Chat", 1, 0, 1,0,false));
+                return Optional.of(new AnimalCard("Chat", 1, 0, 1,0,false, new NombreuseVie()));
             case "grizzly":
                 return Optional.of(new AnimalCard("Grizzly", 6, 4, 3,0,false));
             case "coyote":
@@ -25,17 +26,17 @@ public class CardFactory {
             case "hermine":
                 return Optional.of(new AnimalCard("Hermine", 3, 1, 1,0,false));
             case "louveteau":
-                return Optional.of(new AnimalCard("Louveteau", 1, 1, 1,0,false));
+                return Optional.of(new AnimalCard("Louveteau", 1, 1, 1,0,false,new Croissance()));
             case "loup":
                 return Optional.of(new AnimalCard("Loup", 2, 3, 2,0,false));
             case "punaise":
-                return Optional.of(new AnimalCard("Punaise", 2, 1, 0,2,false));
+                return Optional.of(new AnimalCard("Punaise", 2, 1, 0,2,false,new Puant()));
             case "elan":
-                return Optional.of(new AnimalCard("Elan", 4, 2, 2,0,false));
+                return Optional.of(new AnimalCard("Elan", 4, 2, 2,0,false,new Coureur()));
             case "vipere":
-                return Optional.of(new AnimalCard("Vipère", 1, 1, 2,0,false));
+                return Optional.of(new AnimalCard("Vipère", 1, 1, 2,0,false,new ContactMortel()));
             case "porc-epic":
-                return Optional.of(new AnimalCard("Proc-épic", 2, 1, 1,0,false));
+                return Optional.of(new AnimalCard("Proc-épic", 2, 1, 1,0,false, new PiquesPointues()));
             default:
                 return Optional.empty();
         }

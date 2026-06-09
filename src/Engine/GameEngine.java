@@ -1,5 +1,6 @@
 package Engine;
 
+import modele.Power.Power;
 import modele.Score;
 import modele.board.*;
 import modele.player.*;
@@ -39,15 +40,14 @@ public class GameEngine {
         for (int i = 0; i < 4; i++) {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
-            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack);
+            resolveSlotCombat(attackerSlot, defenderSlot, isPlayerAttack,i);
         }
     }
 
-    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack) {
+    private void resolveSlotCombat(Slot attackerSlot, Slot defenderSlot, boolean isPlayerAttack,int col) {
         if (attackerSlot.isEmpty()) {
             return;
         }
-
         Card baseCard = attackerSlot.getCard();
         Optional<AnimalCard> optAttacker = baseCard.isAnimal();
         if (!optAttacker.isPresent()) {
@@ -55,7 +55,16 @@ public class GameEngine {
         }
 
         AnimalCard attackerAnimal = optAttacker.get();
+        for(Power power : attackerAnimal.getPower()) {
+            power.onDebut(attackerSlot);
+        }
         int damage = attackerAnimal.getAttackPoints();
+        if (!defenderSlot.isEmpty() && defenderSlot.getCard().isAnimal().isPresent()) {
+            AnimalCard defenderAnimal = defenderSlot.getCard().isAnimal().get();
+            for (Power p : defenderAnimal.getPower()) {
+                damage = p.modifyOpponentAttack(damage);
+            }
+        }
         if (damage <= 0) {
             return;
         }
@@ -64,6 +73,15 @@ public class GameEngine {
             applyDirectDamage(attackerAnimal, damage, isPlayerAttack);
         } else {
             applyCardDamage(attackerAnimal, defenderSlot, damage, isPlayerAttack);
+            if(attackerAnimal.isDead()){
+                System.out.println(attackerAnimal.getNom() + " a été éliminé(e) par le retour de dégâts !");
+                removeDeadCard(attackerSlot, !isPlayerAttack);
+                return;
+            }
+        }
+        int row = isPlayerAttack ? 2:1;
+        for (Power p : attackerAnimal.getPower()) {
+            p.onEndTurn(attackerAnimal, row, col, m_board);
         }
     }
 
@@ -77,8 +95,21 @@ public class GameEngine {
     private void applyCardDamage(AnimalCard attacker, Slot defenderSlot, int damage, boolean isPlayerAttack) {
         Card defenderCard = defenderSlot.getCard();
         int defenderHealth = defenderCard.getHealthPoints();
-        defenderCard.takeDamage(damage);
-        System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
+        for(Power p : attacker.getPower()){
+            damage = p.modifyDamage(attacker,defenderSlot.getCard(),damage);
+
+        }
+        if(!defenderCard.isDead()){
+            defenderCard.takeDamage(damage);
+            Optional<AnimalCard> optdefenderCard = defenderCard.isAnimal();
+            if (optdefenderCard.isPresent()) {
+                AnimalCard defenderAnimal = optdefenderCard.get();
+                for (Power p : defenderAnimal.getPower()) {
+                    p.onReceiveDamage(attacker);
+                }
+            }
+            System.out.println(attacker.getNom() + " a infligé " + damage + " dégâts à " + defenderCard.getNom() + ".");
+        }
 
         if (defenderCard.isDead()) {
             System.out.println(defenderCard.getNom() + " a été éliminé(e) !");
@@ -173,7 +204,11 @@ public class GameEngine {
                     if (optsacrifice.isPresent()) {
                         List<Integer> sacrifice = optsacrifice.get();
                         for(Integer i : sacrifice){
-                             m_board.getSlot(Board.ROW_PLAYER,i).removeCard(m_player.getGraves());
+                            Optional<AnimalCard> optcards = m_board.getSlot(Board.ROW_PLAYER,i).getCard().isAnimal();
+                            AnimalCard cards = optcards.get();
+                            if(!cards.hasPower("Nombreuse Vie")) {
+                                m_board.getSlot(Board.ROW_PLAYER,i).removeCard(m_player.getGraves());
+                            }
                         }
                         if (m_board.getSlot(Board.ROW_PLAYER, m_input.getIndexSlot()).isEmpty()) {
                             m_board.getSlot(Board.ROW_PLAYER,m_input.getIndexSlot()).setCard(card);
