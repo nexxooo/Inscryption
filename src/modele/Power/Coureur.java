@@ -8,7 +8,7 @@ public class Coureur extends Power {
         super("Coureur");
     }
 
-    public void onAttack(AnimalCard attacker, int currentRow, int currentCol, Board board) {
+    public void onEndTurn(AnimalCard attacker, int currentRow, int currentCol, Board board) {
         int rightCol = currentCol + 1;
         int leftCol = currentCol - 1;
 

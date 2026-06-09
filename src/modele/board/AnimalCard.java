@@ -73,4 +73,8 @@ public class AnimalCard extends Card {
         }
         return false;
     }
+
+    public void setAttack(int att){
+        m_attackPoints = att;
+    }
 }

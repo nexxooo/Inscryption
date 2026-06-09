@@ -55,6 +55,9 @@ public class GameEngine {
         }
 
         AnimalCard attackerAnimal = optAttacker.get();
+        for(Power p : attackerAnimal.getPower()){
+            p.onAttack(attackerAnimal,defenderSlot.getCard());
+        }
         for(Power power : attackerAnimal.getPower()) {
             power.onDebut(attackerSlot);
         }
@@ -70,7 +73,7 @@ public class GameEngine {
         }
         int row = isPlayerAttack ? 2:1;
         for (Power p : attackerAnimal.getPower()) {
-            p.onAttack(attackerAnimal, row, col, m_board);
+            p.onEndTurn(attackerAnimal, row, col, m_board);
         }
     }
 
