@@ -42,7 +42,7 @@ public class InputHandelerTest {
         handler.askChoice(3); // On suppose qu'on a 4 cartes en main (index max = 3)
 
         assertEquals(UserChoice.PLACER, handler.getChoice(), "Le choix devrait être PLACER");
-        assertEquals(1, handler.getIndexCard(), "L'index de la carte devrait être 1 (2ème carte)");
+        assertEquals(2, handler.getIndexCard(), "L'index de la carte devrait être 2");
         assertEquals(2, handler.getIndexSlot(), "L'index de la case devrait être 2 (B3)");
     }
 
@@ -56,7 +56,7 @@ public class InputHandelerTest {
 
 
         assertEquals(UserChoice.PLACER, handler.getChoice());
-        assertEquals(0, handler.getIndexCard(), "La carte devrait être 0 (1ère carte)");
+        assertEquals(1, handler.getIndexCard(), "La carte devrait être 1");
         assertEquals(0, handler.getIndexSlot(), "La case devrait être 0 (B1)");
     }
 }

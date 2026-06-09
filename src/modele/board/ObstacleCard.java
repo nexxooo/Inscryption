@@ -16,4 +16,9 @@ public class ObstacleCard extends Card {
         lines[6] = "*-----------*";
         return lines;
     }
+
+    @Override
+    public String toString() {
+        return getNom() + " PV : " + getHealthPoints();
+    }
 }

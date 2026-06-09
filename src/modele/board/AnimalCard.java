@@ -41,7 +41,7 @@ public class AnimalCard extends Card {
 
     @Override
     public String toString() {
-        return getNom()+" PV:"+getMaxHealth()+" ATK:"+getAttackPoints()+"BLOOD:"+getBloodCost()+"BONES:"+getBoneCost();
+        return getNom() + " PV : " + getMaxHealth() + " ATK : " + getAttackPoints() + " BLOOD : " + getBloodCost() + " BONES : " + getBoneCost();
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class ContactMortel extends Power{
     public ContactMortel() {
-        super("Conctat Mortel");
+        super("Contact Mortel");
     }
 
     @Override

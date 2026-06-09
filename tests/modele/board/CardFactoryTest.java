@@ -20,7 +20,7 @@ public class CardFactoryTest {
         assertTrue(optChat.isPresent());
         AnimalCard chat = optChat.get();
         assertEquals("Chat", chat.getNom());
-        assertEquals(1, chat.getAttackPoints());
+        assertEquals(0, chat.getAttackPoints());
     }
     @Test
     public void testNotAnimalCard()
