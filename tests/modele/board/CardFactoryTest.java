@@ -10,7 +10,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 public class CardFactoryTest {
     @Test

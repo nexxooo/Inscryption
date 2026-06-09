@@ -86,7 +86,48 @@ public class Board {
 
     }
 
+    // Encapsulation Delegate Methods to prevent getter-chaining
+    public boolean isEmpty(int row, int col) {
+        Slot s = getSlot(row, col);
+        return s == null || s.isEmpty();
+    }
 
+    public Card getCard(int row, int col) {
+        Slot s = getSlot(row, col);
+        return s != null ? s.getCard() : null;
+    }
 
+    public Optional<AnimalCard> getAnimalCard(int row, int col) {
+        Card c = getCard(row, col);
+        return c != null ? c.isAnimal() : Optional.empty();
+    }
 
+    public void removeCard(int row, int col) {
+        Slot s = getSlot(row, col);
+        if (s != null) {
+            s.removeCard();
+        }
+    }
+
+    public void removeCard(int row, int col, Graves graves) {
+        Slot s = getSlot(row, col);
+        if (s != null) {
+            s.removeCard(graves);
+        }
+    }
+
+    public void setCard(Card c, int row, int col) {
+        Slot s = getSlot(row, col);
+        if (s != null) {
+            s.setCard(c);
+        }
+    }
+
+    public String[] getSlotASCII(int row, int col) {
+        Slot s = getSlot(row, col);
+        if (s != null) {
+            return s.getASCII();
+        }
+        return new String[7];
+    }
 }

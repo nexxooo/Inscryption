@@ -161,12 +161,11 @@ public class InputHandeler {
                     System.out.println("\u001B[31mErreur : Case invalide.\u001B[0m");
                     continue;
                 }
-                Slot slot = board.getSlot(Board.ROW_PLAYER, index);
-                if (slot.isEmpty()) {
+                if (board.isEmpty(Board.ROW_PLAYER, index)) {
                     System.out.println("\u001B[31m Erreur : Cette case est vide !\u001B[0m");
                     continue;
                 }
-                if (slot.getCard().isAnimal().isEmpty()) {
+                if (board.getAnimalCard(Board.ROW_PLAYER, index).isEmpty()) {
                     System.out.println("\u001B[31mErreur : Vous ne pouvez sacrifier que des animaux !\u001B[0m");
                     continue;
                 }

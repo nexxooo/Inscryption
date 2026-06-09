@@ -13,15 +13,15 @@ public class Coureur extends Power {
         int leftCol = currentCol - 1;
 
         // 1. Tenter de se déplacer à droite
-        if (rightCol < 4 && board.getSlot(currentRow, rightCol).isEmpty()) {
-            board.getSlot(currentRow, rightCol).setCard(attacker);
-            board.getSlot(currentRow, currentCol).removeCard();
+        if (rightCol < 4 && board.isEmpty(currentRow, rightCol)) {
+            board.setCard(attacker, currentRow, rightCol);
+            board.removeCard(currentRow, currentCol);
             System.out.println(attacker.getNom() + " s'est déplacé vers la droite.");
         }
         // 2. Tenter de se déplacer à gauche si la droite est bloquée
-        else if (leftCol >= 0 && board.getSlot(currentRow, leftCol).isEmpty()) {
-            board.getSlot(currentRow, leftCol).setCard(attacker);
-            board.getSlot(currentRow, currentCol).removeCard();
+        else if (leftCol >= 0 && board.isEmpty(currentRow, leftCol)) {
+            board.setCard(attacker, currentRow, leftCol);
+            board.removeCard(currentRow, currentCol);
             System.out.println(attacker.getNom() + " s'est déplacé vers la gauche.");
         }
 

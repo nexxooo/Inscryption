@@ -17,7 +17,7 @@ public class OpponentAI {
     {
         for(int col = 0; col < 4; col++)
         {
-            if(board.getSlot(Board.ROW_OPPONENT_QUEUE,col).isEmpty() && !queue.isEmpty())
+            if(board.isEmpty(Board.ROW_OPPONENT_QUEUE, col) && !queue.isEmpty())
             {
                 Card cardToPlay = queue.removeFirst();
                 board.addCard(cardToPlay, Board.ROW_OPPONENT_QUEUE, col);

@@ -39,15 +39,13 @@ public class SimulationTour {
         Score score = new Score();
         GameView view = new GameView();
 
-
-
         AnimalCard ecureuil = new AnimalCard("Ecureuil", 1, 0, 0, 0, false);
         AnimalCard hermine = new AnimalCard("Hermine", 3, 1, 1, 0, false);
         AnimalCard loup = new AnimalCard("Loup", 2, 3, 2, 0, false);
         
-        player.getDeck().addCard(ecureuil); // Pioché en premier (index 0)
-        player.getDeck().addCard(hermine);  // Pioché en deuxième (index 1)
-        player.getDeck().addCard(loup);     // Pioché en troisième (index 2)
+        player.addCardToDeck(ecureuil); // Pioché en premier (index 0)
+        player.addCardToDeck(hermine);  // Pioché en deuxième (index 1)
+        player.addCardToDeck(loup);     // Pioché en troisième (index 2)
 
         // Initialisation de l'IA adverse
         List<Card> queueEcureuils = new ArrayList<>();
@@ -63,18 +61,18 @@ public class SimulationTour {
         GameEngine engine = new GameEngine(player, score, view, input);
         Board board = new Board();
         // Vider le plateau pour éviter les obstacles aléatoires lors du test
-        board.getSlot(Board.ROW_PLAYER, 0).removeCard();
-        board.getSlot(Board.ROW_PLAYER, 1).removeCard();
-        board.getSlot(Board.ROW_PLAYER, 2).removeCard();
-        board.getSlot(Board.ROW_PLAYER, 3).removeCard();
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).removeCard();
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+        board.removeCard(Board.ROW_PLAYER, 0);
+        board.removeCard(Board.ROW_PLAYER, 1);
+        board.removeCard(Board.ROW_PLAYER, 2);
+        board.removeCard(Board.ROW_PLAYER, 3);
+        board.removeCard(Board.ROW_OPPONENT_ACTIVE, 0);
+        board.removeCard(Board.ROW_OPPONENT_ACTIVE, 1);
+        board.removeCard(Board.ROW_OPPONENT_ACTIVE, 2);
+        board.removeCard(Board.ROW_OPPONENT_ACTIVE, 3);
         
         // Ajouter une carte dans la file d'attente de l'adversaire (qui va avancer au tour de l'IA)
         AnimalCard moineauAdverse = new AnimalCard("Moineau", 2, 1, 1, 0, true);
-        board.getSlot(Board.ROW_OPPONENT_QUEUE, 2).setCard(moineauAdverse);
+        board.setCard(moineauAdverse, Board.ROW_OPPONENT_QUEUE, 2);
 
         engine.setBoard(board);
 
@@ -85,10 +83,10 @@ public class SimulationTour {
 
         // Vérifications après le tour du joueur
         // L'écureuil a bien été retiré de la main
-        assertEquals(0, player.getHand().getCardCount());
+        assertEquals(0, player.getHandCardCount());
         // L'écureuil a bien été posé en B1 (ROW_PLAYER, index 0)
-        assertFalse(board.getSlot(Board.ROW_PLAYER, 0).isEmpty());
-        assertEquals("Ecureuil", board.getSlot(Board.ROW_PLAYER, 0).getCard().getNom());
+        assertFalse(board.isEmpty(Board.ROW_PLAYER, 0));
+        assertEquals("Ecureuil", board.getCard(Board.ROW_PLAYER, 0).getNom());
         
         // L'écureuil a attaqué à la fin du tour du joueur (0 ATK -> score reste à 0)
         assertEquals(0, score.getScore());
@@ -96,8 +94,8 @@ public class SimulationTour {
         // 3. Tour de l'adversaire
         // La file d'attente de l'adversaire avance (le Moineau passe de QUEUE à ACTIVE sur la colonne 2 (index 2))
         board.advanceRow();
-        assertFalse(board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).isEmpty());
-        assertEquals("Moineau", board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).getCard().getNom());
+        assertFalse(board.isEmpty(Board.ROW_OPPONENT_ACTIVE, 2));
+        assertEquals("Moineau", board.getCard(Board.ROW_OPPONENT_ACTIVE, 2).getNom());
 
         // Phase d'attaque de l'adversaire (le Moineau a 1 ATK, vole par-dessus le slot joueur, inflige 1 dégât direct)
         engine.attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);

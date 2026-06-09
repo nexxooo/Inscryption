@@ -16,7 +16,7 @@ public class CoureurTest {
         Coureur coureur = new Coureur();
         coureur.onEndTurn(elan, Board.ROW_PLAYER, 0, board);
 
-        assertTrue(board.getSlot(Board.ROW_PLAYER, 0).isEmpty());
-        assertEquals("Elan", board.getSlot(Board.ROW_PLAYER, 1).getCard().getNom());
+        assertTrue(board.isEmpty(Board.ROW_PLAYER, 0));
+        assertEquals("Elan", board.getCard(Board.ROW_PLAYER, 1).getNom());
     }
 }
