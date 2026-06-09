@@ -14,6 +14,7 @@ public class InputHandeler {
     private int m_indexCard;
     private int m_indexSlot;
     private Scanner scanner;
+    private int m_stoneChoice;
 
     public InputHandeler(){this.scanner = new Scanner(System.in);}
 
@@ -40,6 +41,9 @@ public class InputHandeler {
     private void setIndexSlot(int m_indexSlot) {
         this.m_indexSlot = m_indexSlot;
     }
+
+    private void setStoneChoice(int m_stoneChoice) {this.m_stoneChoice = m_stoneChoice;}
+    public int getStoneChoice() {return m_stoneChoice;}
 
     public void askChoice(int maxCardIndex){
         System.out.println("\n--- Actions possibles : 'placer <num_carte> <case>' (ex: placer 1 b2) ou 'fin' ---");
@@ -153,5 +157,31 @@ public class InputHandeler {
             }
         }
         return Optional.of(sacrifices);
+    }
+
+    public void askStoneChoice(int indexMax){
+        System.out.println("\n--- Choisissez une carte pour la pierre ---");
+        System.out.print("> ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if(input.isEmpty()){
+            System.out.println("Saisie vide.");
+            askStoneChoice(indexMax);
+            return;
+        }
+        try{
+            int cardIndex = Integer.parseInt(input);
+            if(cardIndex >= indexMax ||cardIndex < 0){
+                System.out.println("Erreur: le numéro de la carte est trop grand ou petit.");
+                askStoneChoice(indexMax);
+                return;
+
+            }
+            setStoneChoice(cardIndex);
+    }
+        catch (Exception e) {
+            System.out.println("Veuillez entrer un nombre.");
+            askStoneChoice(indexMax);
+            return;
+        }
     }
 }

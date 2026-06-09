@@ -3,6 +3,7 @@ package modele.player;
 import modele.board.AnimalCard;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class Deck extends ContainerCard{
@@ -21,5 +22,21 @@ public class Deck extends ContainerCard{
     }
     public void shuffle(){
         Collections.shuffle(m_cards);
+    }
+
+    public List<AnimalCard> getList(){
+        return m_cards;
+    }
+
+    public int sizeDeck(){
+        return m_cards.size();
+    }
+
+    public AnimalCard getCard(int index){
+        return m_cards.get(index);
+    }
+
+    public void deleteCard(int index){
+        m_cards.remove(index);
     }
 }
