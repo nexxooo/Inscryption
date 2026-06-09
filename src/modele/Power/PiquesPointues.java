@@ -4,7 +4,7 @@ import modele.board.AnimalCard;
 import modele.board.Card;
 
 public class PiquesPointues extends Power{
-    PiquesPointues(){
+    public PiquesPointues(){
         super("Piques Pointues");
     }
 

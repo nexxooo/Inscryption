@@ -18,13 +18,13 @@ public class AnimalCard extends Card {
         m_boneCost = bone;
         isFlying = fly;
     }
-    public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly,List<Power> power){
+    public AnimalCard (String name,int hp, int att, int blo, int bone, boolean fly,Power power){
         super(name, hp);
         m_attackPoints = att;
         m_bloodCost = blo;
         m_boneCost = bone;
         isFlying = fly;
-        m_power = power;
+       addPower(power);
     }
 
     @Override
@@ -72,6 +72,9 @@ public class AnimalCard extends Card {
             }
         }
         return false;
+    }
+    public void addPower(Power power){
+        m_power.add(power);
     }
 
     public void setAttack(int att){
