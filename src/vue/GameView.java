@@ -76,4 +76,13 @@ public class GameView {
 
     }
 
+    public void displayCardChoices(AnimalCard[] choices) {
+        System.out.println("\n=== CHOISISSEZ UNE NOUVELLE CARTE A AJOUTER A VOTRE DECK ===");
+        for (int i = 0; i < choices.length; i++) {
+            if (choices[i] != null) {
+                System.out.println(i + " : " + choices[i].toString());
+            }
+        }
+    }
+
 }

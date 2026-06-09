@@ -15,8 +15,13 @@ public class InputHandeler {
     private int m_indexSlot;
     private Scanner scanner;
     private int m_stoneChoice;
+    private int m_cardChoice;
 
-    public InputHandeler(){this.scanner = new Scanner(System.in);}
+    public InputHandeler(){
+        this.scanner = new Scanner(System.in);
+        this.m_stoneChoice = -1;
+        this.m_cardChoice = -1;
+    }
 
     public UserChoice getChoice() {
         return m_choice;
@@ -45,13 +50,16 @@ public class InputHandeler {
     private void setStoneChoice(int m_stoneChoice) {this.m_stoneChoice = m_stoneChoice;}
     public int getStoneChoice() {return m_stoneChoice;}
 
+    private void setCardChoice(int m_cardChoice) {this.m_cardChoice = m_cardChoice;}
+    public int getCardChoice() {return m_cardChoice;}
+
     public void askChoice(int maxCardIndex){
-        System.out.println("\n \u001B[33m--- Actions possibles : 'placer <num_carte> <case>' (ex: placer 1 b2) ou 'fin' ---\u001B[0m");
+        System.out.println("\n--- Actions possibles : 'placer <num_carte> <case>' (ex: placer 1 b2) ou 'fin' ---");
         System.out.print("> ");
         int cardIndex;
         String input = scanner.nextLine().trim().toLowerCase();
         if(input.isEmpty()){
-            System.out.println("\u001B[31m Saisie vide.\u001B[0m");
+            System.out.println("Saisie vide.");
             askChoice(maxCardIndex);
             return;
         }
@@ -64,19 +72,19 @@ public class InputHandeler {
             case "placer":
                 setChoice(UserChoice.PLACER);
                 if(splite.length != 3 ){
-                    System.out.println("\u001B[31m erreur de saisie \u001B[0m");
+                    System.out.println("erreur de saisie");
                     askChoice(maxCardIndex);
                     return ;
                 }
                 int card = getCardIndex(splite,maxCardIndex);
                 if(card == -1){
-                    System.out.println("\u001B[31m Erreur: le numéro de la carte doit être un chiffre.\u001B[0m");
+                    System.out.println("Erreur: le numéro de la carte doit être un chiffre.");
                     askChoice(maxCardIndex);
                     return;
                 }
                 int slot = getIndexSlot(splite[2]);
                 if(slot == -1) {
-                    System.out.println("\u001B[31mErreur: la position n'est pas valide\u001B[0m");
+                    System.out.println("Erreur: la position n'est pas valide");
                     askChoice(maxCardIndex);
                     return;
                 }
@@ -108,7 +116,7 @@ public class InputHandeler {
         try{
             int cardIndex = Integer.parseInt(card[1]);
             if(cardIndex > maxCardIndex ||cardIndex < 0){
-                System.out.println("\u001B[31mErreur: le numéro de la carte est trop grand ou petit.\u001B[0m");
+                System.out.println("Erreur: le numéro de la carte est trop grand ou petit.");
                 return -1;
 
             }
@@ -119,68 +127,105 @@ public class InputHandeler {
             return -1;
         }
     }
+    private int parseSlotIndex(String slot) {
+        switch (slot.trim().toLowerCase()) {
+            case "b1":
+                return 0;
+            case "b2":
+                return 1;
+            case "b3":
+                return 2;
+            case "b4":
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
     public Optional<List<Integer>> askSacrifices(int bloodRequired, Board board) {
         Scanner scanner = new Scanner(System.in);
         List<Integer> sacrifices = new ArrayList<>();
         int bloodCount = 0;
-        System.out.println("\u001B[33mVous devez sacrifier " + bloodRequired + " créatures.\u001B[0m");
+        System.out.println("Vous devez sacrifier " + bloodRequired + " créatures.");
         while (bloodCount < bloodRequired) {
-            System.out.println("\u001B[33mEntrez l'index à sacrifier (ou cancel pour annuler) :\u001B[0m");
+            System.out.println("Entrez l'index à sacrifier (ou cancel pour annuler) :");
             String input = scanner.nextLine().trim().toLowerCase();
 
             if (input.equals("cancel")) {
                 return Optional.empty();
             } else {
-                int status = getIndexSlot(input);
+                int index = parseSlotIndex(input);
 
-                if (status == -1) {
-                    System.out.println("\u001B[31mErreur : Case invalide.\u001B[0m");
+                if (index == -1) {
+                    System.out.println("Erreur : Case invalide.");
                     continue;
                 }
-                int index = getIndexSlot();
                 Slot slot = board.getSlot(Board.ROW_PLAYER, index);
                 if (slot.isEmpty()) {
-                    System.out.println("\u001B[31m Erreur : Cette case est vide !\u001B[0m");
+                    System.out.println("Erreur : Cette case est vide !");
                     continue;
                 }
                 if (slot.getCard().isAnimal().isEmpty()) {
-                    System.out.println("\u001B[31mErreur : Vous ne pouvez sacrifier que des animaux !\u001B[0m");
+                    System.out.println("Erreur : Vous ne pouvez sacrifier que des animaux !");
                     continue;
                 }
                 if (sacrifices.contains(index)) {
-                    System.out.println("\u001B[31mErreur : Vous avez déjà sélectionné cette carte !\u001B[0m");
+                    System.out.println("Erreur : Vous avez déjà sélectionné cette carte !");
                     continue;
                 }
                 sacrifices.add(index);
                 bloodCount++;
-                System.out.println("\u001B[32m Sacrifice accepté (" + bloodCount + "/" + bloodRequired + ").\u001B[0m ");
+                System.out.println("Sacrifice accepté (" + bloodCount + "/" + bloodRequired + ").");
             }
         }
         return Optional.of(sacrifices);
     }
 
-    public void askStoneChoice(int indexMax){
-        System.out.println("\n \u001B[33m--- Choisissez une carte pour la pierre ---\u001B[0m");
+    public void askStoneChoice(int indexMax, String message){
+        System.out.println("\n--- " + message + " ---");
         System.out.print("> ");
         String input = scanner.nextLine().trim().toLowerCase();
         if(input.isEmpty()){
-            System.out.println("\u001B[31mSaisie vide.\u001B[0m");
-            askStoneChoice(indexMax);
+            System.out.println("Saisie vide.");
+            askStoneChoice(indexMax, message);
             return;
         }
         try{
             int cardIndex = Integer.parseInt(input);
-            if(cardIndex >= indexMax ||cardIndex < 0){
-                System.out.println("\u001B[31mErreur: le numéro de la carte est trop grand ou petit.\u001B[0m");
-                askStoneChoice(indexMax);
+            if(cardIndex >= indexMax || cardIndex < 0){
+                System.out.println("Erreur: le numéro de la carte est trop grand ou petit.");
+                askStoneChoice(indexMax, message);
                 return;
-
             }
             setStoneChoice(cardIndex);
-    }
+        }
         catch (Exception e) {
-            System.out.println("\u001B[31mVeuillez entrer un nombre.\u001B[0m");
-            askStoneChoice(indexMax);
+            System.out.println("Veuillez entrer un nombre.");
+            askStoneChoice(indexMax, message);
+            return;
+        }
+    }
+
+    public void askCardChoice(int indexMax) {
+        System.out.println("\n--- Choisissez une carte à ajouter à votre deck ---");
+        System.out.print("> ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if (input.isEmpty()) {
+            System.out.println("Saisie vide.");
+            askCardChoice(indexMax);
+            return;
+        }
+        try {
+            int choice = Integer.parseInt(input);
+            if (choice >= indexMax || choice < 0) {
+                System.out.println("Erreur: le numéro de la carte est invalide.");
+                askCardChoice(indexMax);
+                return;
+            }
+            setCardChoice(choice);
+        } catch (Exception e) {
+            System.out.println("Veuillez entrer un nombre.");
+            askCardChoice(indexMax);
             return;
         }
     }
