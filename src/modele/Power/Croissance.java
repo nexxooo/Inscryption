@@ -2,7 +2,7 @@ package modele.Power;
 
 import modele.board.AnimalCard;
 import modele.board.CardFactory;
-import modele.board.Slot;
+import modele.board.Board;
 
 import java.util.Optional;
 
@@ -17,8 +17,8 @@ public class Croissance extends Power {
     }
 
     @Override
-    public void onDebut(Slot slot) {
+    public void onDebut(Board board, int row, int col) {
         Optional<AnimalCard> optcrad = CardFactory.createAnimalCard("loup");
-        slot.setCard(optcrad.get());
+        board.setCard(optcrad.get(), row, col);
     }
 }

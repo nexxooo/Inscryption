@@ -53,7 +53,7 @@ public class GameEngineTest {
         Board board = new Board();
 
         AnimalCard loup = new AnimalCard("Loup", 2, 3, 2, 0, false);
-        board.getSlot(Board.ROW_PLAYER, 0).setCard(loup);
+        board.setCard(loup, Board.ROW_PLAYER, 0);
 
         engine.setBoard(board);
 
@@ -75,7 +75,7 @@ public class GameEngineTest {
         Board board = new Board();
 
         AnimalCard grizzly = new AnimalCard("Grizzly", 6, 4, 3, 0, false);
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).setCard(grizzly);
+        board.setCard(grizzly, Board.ROW_OPPONENT_ACTIVE, 1);
 
         engine.setBoard(board);
 
@@ -98,11 +98,11 @@ public class GameEngineTest {
         
 
         AnimalCard coyote = new AnimalCard("Coyote", 1, 2, 0, 4, false);
-        board.getSlot(Board.ROW_PLAYER, 2).setCard(coyote);
+        board.setCard(coyote, Board.ROW_PLAYER, 2);
 
 
         AnimalCard grizzly = new AnimalCard("Grizzly", 6, 4, 3, 0, false);
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).setCard(grizzly);
+        board.setCard(grizzly, Board.ROW_OPPONENT_ACTIVE, 2);
 
         engine.setBoard(board);
 
@@ -128,11 +128,11 @@ public class GameEngineTest {
 
 
         AnimalCard grizzly = new AnimalCard("Grizzly", 6, 4, 3, 0, false);
-        board.getSlot(Board.ROW_PLAYER, 0).setCard(grizzly);
+        board.setCard(grizzly, Board.ROW_PLAYER, 0);
 
 
         AnimalCard coyote = new AnimalCard("Coyote", 1, 2, 0, 4, false);
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).setCard(coyote);
+        board.setCard(coyote, Board.ROW_OPPONENT_ACTIVE, 0);
 
         engine.setBoard(board);
 
@@ -141,7 +141,7 @@ public class GameEngineTest {
 
 
         assertTrue(coyote.isDead());
-        assertTrue(board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).isEmpty());
+        assertTrue(board.isEmpty(Board.ROW_OPPONENT_ACTIVE, 0));
         assertEquals(3, score.getScore());
     }
 
@@ -157,11 +157,11 @@ public class GameEngineTest {
 
 
         AnimalCard moineau = new AnimalCard("Moineau", 2, 1, 1, 0, true);
-        board.getSlot(Board.ROW_PLAYER, 1).setCard(moineau);
+        board.setCard(moineau, Board.ROW_PLAYER, 1);
 
 
         AnimalCard grizzly = new AnimalCard("Grizzly", 6, 4, 3, 0, false);
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).setCard(grizzly);
+        board.setCard(grizzly, Board.ROW_OPPONENT_ACTIVE, 1);
 
         engine.setBoard(board);
 
@@ -180,11 +180,10 @@ public class GameEngineTest {
         Score score = new Score();
         GameView view = new GameView();
         
-
         AnimalCard chat = new AnimalCard("Chat", 1, 0, 1, 0, false, new modele.Power.NombreuseVie());
         AnimalCard grizzly = new AnimalCard("Grizzly", 6, 4, 3, 0, false);
-        player.getDeck().addCard(chat);
-        player.getDeck().addCard(grizzly);
+        player.addCardToDeck(chat);
+        player.addCardToDeck(grizzly);
 
 
         setSimulatedInput("0\n0\n");
@@ -196,8 +195,8 @@ public class GameEngineTest {
 
         assertTrue(grizzly.hasPower("Nombreuse Vie"));
 
-        assertEquals(1, player.getDeck().sizeDeck());
-        assertEquals(grizzly, player.getDeck().getCard(0));
+        assertEquals(1, player.getDeckSize());
+        assertEquals(grizzly, player.getDeckCard(0));
     }
 
     @Test
@@ -213,14 +212,14 @@ public class GameEngineTest {
             @Override
             void initBoard() {
                 Board board = new Board();
-                board.getSlot(Board.ROW_PLAYER, 0).setCard(new AnimalCard("Loup", 2, 3, 2, 0, false));
-                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                board.setCard(new AnimalCard("Loup", 2, 3, 2, 0, false), Board.ROW_PLAYER, 0);
+                board.removeCard(Board.ROW_PLAYER, 1);
+                board.removeCard(Board.ROW_PLAYER, 2);
+                board.removeCard(Board.ROW_PLAYER, 3);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 0);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 1);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 2);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 3);
                 setBoard(board);
             }
         };
@@ -243,14 +242,14 @@ public class GameEngineTest {
             @Override
             void initBoard() {
                 Board board = new Board();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).setCard(new AnimalCard("Grizzly", 6, 4, 3, 0, false));
-                board.getSlot(Board.ROW_PLAYER, 0).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                board.setCard(new AnimalCard("Grizzly", 6, 4, 3, 0, false), Board.ROW_OPPONENT_ACTIVE, 0);
+                board.removeCard(Board.ROW_PLAYER, 0);
+                board.removeCard(Board.ROW_PLAYER, 1);
+                board.removeCard(Board.ROW_PLAYER, 2);
+                board.removeCard(Board.ROW_PLAYER, 3);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 1);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 2);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 3);
                 setBoard(board);
             }
         };
@@ -271,10 +270,10 @@ public class GameEngineTest {
         Board board = new Board();
         
         AnimalCard vipere = new AnimalCard("Vipere", 1, 1, 2, 0, false, new modele.Power.ContactMortel());
-        board.getSlot(Board.ROW_PLAYER, 0).setCard(vipere);
+        board.setCard(vipere, Board.ROW_PLAYER, 0);
 
         modele.board.ObstacleCard rocher = new modele.board.ObstacleCard("Rocher", 5);
-        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).setCard(rocher);
+        board.setCard(rocher, Board.ROW_OPPONENT_ACTIVE, 0);
 
         engine.setBoard(board);
 
@@ -282,7 +281,7 @@ public class GameEngineTest {
 
         assertEquals(4, rocher.getHealthPoints());
         assertFalse(rocher.isDead());
-        assertFalse(board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).isEmpty());
+        assertFalse(board.isEmpty(Board.ROW_OPPONENT_ACTIVE, 0));
     }
 
     @Test
@@ -298,14 +297,14 @@ public class GameEngineTest {
             @Override
             void initBoard() {
                 Board board = new Board();
-                board.getSlot(Board.ROW_PLAYER, 0).setCard(new AnimalCard("Loup", 2, 3, 2, 0, false));
-                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
-                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
-                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                board.setCard(new AnimalCard("Loup", 2, 3, 2, 0, false), Board.ROW_PLAYER, 0);
+                board.removeCard(Board.ROW_PLAYER, 1);
+                board.removeCard(Board.ROW_PLAYER, 2);
+                board.removeCard(Board.ROW_PLAYER, 3);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 0);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 1);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 2);
+                board.removeCard(Board.ROW_OPPONENT_ACTIVE, 3);
                 setBoard(board);
             }
         };

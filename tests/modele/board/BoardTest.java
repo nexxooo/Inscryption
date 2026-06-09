@@ -14,8 +14,8 @@ public class BoardTest {
         AnimalCard ecureuil = new AnimalCard("Ecureuil", 1, 1, 0, 0, false);
         boolean result = board.addCard(ecureuil, Board.ROW_PLAYER, 0);
         assertTrue(result);
-        assertFalse(board.getSlot(Board.ROW_PLAYER, 0).isEmpty());
-        assertEquals("Ecureuil", board.getSlot(Board.ROW_PLAYER,0).getCard().getNom());
+        assertFalse(board.isEmpty(Board.ROW_PLAYER, 0));
+        assertEquals("Ecureuil", board.getCard(Board.ROW_PLAYER,0).getNom());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class BoardTest {
         board.addCard(ecureuil, Board.ROW_PLAYER, 0);
         boolean result = board.addCard(chat, Board.ROW_PLAYER, 0);
         assertFalse(result);
-        assertEquals("Ecureuil", board.getSlot(Board.ROW_PLAYER,0).getCard().getNom());
+        assertEquals("Ecureuil", board.getCard(Board.ROW_PLAYER,0).getNom());
 
     }
 
@@ -38,8 +38,8 @@ public class BoardTest {
         AnimalCard chat = new AnimalCard("Chat",1,0,1,0,false);
         board.addCard(chat, Board.ROW_OPPONENT_QUEUE, 0);
         board.advanceRow();
-        assertTrue(board.getSlot(Board.ROW_OPPONENT_QUEUE, 0).isEmpty());
-        assertFalse(board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).isEmpty());
-        assertEquals("Chat",board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).getCard().getNom());
+        assertTrue(board.isEmpty(Board.ROW_OPPONENT_QUEUE, 0));
+        assertFalse(board.isEmpty(Board.ROW_OPPONENT_ACTIVE, 0));
+        assertEquals("Chat", board.getCard(Board.ROW_OPPONENT_ACTIVE, 0).getNom());
     }
 }

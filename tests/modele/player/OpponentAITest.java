@@ -23,7 +23,7 @@ public class OpponentAITest {
         Board board = new Board();
         ai.playTurn(board);
         assertTrue(ai.getIntendedPlays().isEmpty());
-        assertFalse(board.getSlot(Board.ROW_OPPONENT_QUEUE, 0).isEmpty());
-        assertEquals("Ecureuil", board.getSlot(Board.ROW_OPPONENT_QUEUE, 0).getCard().getNom());
+        assertFalse(board.isEmpty(Board.ROW_OPPONENT_QUEUE, 0));
+        assertEquals("Ecureuil", board.getCard(Board.ROW_OPPONENT_QUEUE, 0).getNom());
     }
 }

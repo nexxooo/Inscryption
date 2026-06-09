@@ -16,15 +16,15 @@ public class GameView {
     private void displayLine(Board b,int ligne,Score sc){
         for(int i = 0;i<7;i++){
             for(int y = 0;y<4;y++) {
-                Slot slot = b.getSlot(ligne, y);
+                String[] slotAscii = b.getSlotASCII(ligne, y);
                 if (ligne == 1 && i == 4 && y == 0) {
-                    System.out.print(getSCore(sc)[0] + "    " + slot.getASCII()[i] + " ");
+                    System.out.print(getSCore(sc)[0] + "    " + slotAscii[i] + " ");
                 }
                 else if (ligne == 1 && i == 5 && y == 0) {
-                    System.out.print(getSCore(sc)[1] + "         " + slot.getASCII()[i] + " ");
+                    System.out.print(getSCore(sc)[1] + "         " + slotAscii[i] + " ");
                 }
                 else {
-                    System.out.print("          " + slot.getASCII()[i] + " ");
+                    System.out.print("          " + slotAscii[i] + " ");
                 }
             }
             System.out.println();
