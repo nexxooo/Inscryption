@@ -15,8 +15,13 @@ public class InputHandeler {
     private int m_indexSlot;
     private Scanner scanner;
     private int m_stoneChoice;
+    private int m_cardChoice;
 
-    public InputHandeler(){this.scanner = new Scanner(System.in);}
+    public InputHandeler(){
+        this.scanner = new Scanner(System.in);
+        this.m_stoneChoice = -1;
+        this.m_cardChoice = -1;
+    }
 
     public UserChoice getChoice() {
         return m_choice;
@@ -44,6 +49,9 @@ public class InputHandeler {
 
     private void setStoneChoice(int m_stoneChoice) {this.m_stoneChoice = m_stoneChoice;}
     public int getStoneChoice() {return m_stoneChoice;}
+
+    private void setCardChoice(int m_cardChoice) {this.m_cardChoice = m_cardChoice;}
+    public int getCardChoice() {return m_cardChoice;}
 
     public void askChoice(int maxCardIndex){
         System.out.println("\n--- Actions possibles : 'placer <num_carte> <case>' (ex: placer 1 b2) ou 'fin' ---");
@@ -119,6 +127,21 @@ public class InputHandeler {
             return -1;
         }
     }
+    private int parseSlotIndex(String slot) {
+        switch (slot.trim().toLowerCase()) {
+            case "b1":
+                return 0;
+            case "b2":
+                return 1;
+            case "b3":
+                return 2;
+            case "b4":
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
     public Optional<List<Integer>> askSacrifices(int bloodRequired, Board board) {
         Scanner scanner = new Scanner(System.in);
         List<Integer> sacrifices = new ArrayList<>();
@@ -131,13 +154,12 @@ public class InputHandeler {
             if (input.equals("cancel")) {
                 return Optional.empty();
             } else {
-                int status = getIndexSlot(input);
+                int index = parseSlotIndex(input);
 
-                if (status == -1) {
+                if (index == -1) {
                     System.out.println("Erreur : Case invalide.");
                     continue;
                 }
-                int index = getIndexSlot();
                 Slot slot = board.getSlot(Board.ROW_PLAYER, index);
                 if (slot.isEmpty()) {
                     System.out.println("Erreur : Cette case est vide !");
@@ -159,28 +181,51 @@ public class InputHandeler {
         return Optional.of(sacrifices);
     }
 
-    public void askStoneChoice(int indexMax){
-        System.out.println("\n--- Choisissez une carte pour la pierre ---");
+    public void askStoneChoice(int indexMax, String message){
+        System.out.println("\n--- " + message + " ---");
         System.out.print("> ");
         String input = scanner.nextLine().trim().toLowerCase();
         if(input.isEmpty()){
             System.out.println("Saisie vide.");
-            askStoneChoice(indexMax);
+            askStoneChoice(indexMax, message);
             return;
         }
         try{
             int cardIndex = Integer.parseInt(input);
-            if(cardIndex >= indexMax ||cardIndex < 0){
+            if(cardIndex >= indexMax || cardIndex < 0){
                 System.out.println("Erreur: le numéro de la carte est trop grand ou petit.");
-                askStoneChoice(indexMax);
+                askStoneChoice(indexMax, message);
                 return;
-
             }
             setStoneChoice(cardIndex);
-    }
+        }
         catch (Exception e) {
             System.out.println("Veuillez entrer un nombre.");
-            askStoneChoice(indexMax);
+            askStoneChoice(indexMax, message);
+            return;
+        }
+    }
+
+    public void askCardChoice(int indexMax) {
+        System.out.println("\n--- Choisissez une carte à ajouter à votre deck ---");
+        System.out.print("> ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        if (input.isEmpty()) {
+            System.out.println("Saisie vide.");
+            askCardChoice(indexMax);
+            return;
+        }
+        try {
+            int choice = Integer.parseInt(input);
+            if (choice >= indexMax || choice < 0) {
+                System.out.println("Erreur: le numéro de la carte est invalide.");
+                askCardChoice(indexMax);
+                return;
+            }
+            setCardChoice(choice);
+        } catch (Exception e) {
+            System.out.println("Veuillez entrer un nombre.");
+            askCardChoice(indexMax);
             return;
         }
     }
