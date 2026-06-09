@@ -36,7 +36,15 @@ public class GameEngine {
         this.m_opponentAI = new OpponentAI(queueEcureuils);
     }
 
-    private void attackPhase(int indexAttackRow, int indexDefenseRow, boolean isPlayerAttack) {
+    void setBoard(Board board) {
+        this.m_board = board;
+    }
+
+    Board getBoard() {
+        return this.m_board;
+    }
+
+    void attackPhase(int indexAttackRow, int indexDefenseRow, boolean isPlayerAttack) {
         for (int i = 0; i < 4; i++) {
             Slot attackerSlot = m_board.getSlot(indexAttackRow, i);
             Slot defenderSlot = m_board.getSlot(indexDefenseRow, i);
@@ -187,7 +195,7 @@ public class GameEngine {
             }
         }
 
-    private void chooseNewCard() {
+    void chooseNewCard() {
         m_gameView.Clear();
         AnimalCard[] choices = CardFactory.createCardChoice();
         m_gameView.displayCardChoices(choices);
@@ -198,7 +206,7 @@ public class GameEngine {
         System.out.println("Vous avez ajouté " + chosenCard.getNom() + " à votre deck !");
     }
 
-    private void Stone(){
+    void Stone(){
         m_gameView.Clear();
         m_gameView.displayDeckList(m_player.getDeck());
         m_input.askStoneChoice(m_player.getDeck().sizeDeck(), "Choisissez une carte à sacrifier pour récupérer son pouvoir");
