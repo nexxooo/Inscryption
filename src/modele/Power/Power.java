@@ -18,6 +18,7 @@ public abstract  class Power {
     public void onDebut(Slot slot) {}
     public void onEndTurn(AnimalCard attacker, int currentRow, int currentCol, Board board){}
     public int modifyDamage(AnimalCard attacker, Card defender,int damage){return damage;}
+    public void onReceiveDamage(AnimalCard attacker){}
 
     public int modifyOpponentAttack(int damage) {
         return damage;
