@@ -150,15 +150,16 @@ public class GameEngine {
                 System.out.println("        DEBUT DU ROUND " + i);
                 System.out.println("==================================");
 
-                // Remettre toutes les cartes de la main et du cimetière dans le deck
-                m_player.getHand().refillDeck(m_player.getDeck());
-                m_player.getGraves().refillDeck(m_player.getDeck());
                 m_player.getGraves().clear(); // réinitialiser le nombre d'os à 0
                 m_player.getDeck().shuffle();
 
                 m_score.resetScore();
 
                 round();
+
+                // Remettre toutes les cartes de la main et du cimetière dans le deck
+                m_player.getHand().refillDeck(m_player.getDeck());
+                m_player.getGraves().refillDeck(m_player.getDeck());
 
                 if (m_score.getScore() >= 5) {
                     playerWins++;
