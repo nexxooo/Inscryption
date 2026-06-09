@@ -37,7 +37,7 @@ public abstract class Card {
     public int getAttackPoints(){
         return 0;
     }
-    public boolean isFlying(){return false;}
+
 
     public Optional<AnimalCard> isAnimal(){
         return Optional.empty();
