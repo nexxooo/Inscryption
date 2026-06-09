@@ -67,15 +67,22 @@ public class AnimalCard extends Card {
             powers.add(p.getShortName());
         }
         
-        String powerStr = "";
-        if (!powers.isEmpty()) {
-            powerStr = String.join(" ", powers);
-            if (powerStr.length() > 9) {
-                powerStr = powerStr.substring(0, 9);
+        String power1 = "";
+        String power2 = "";
+        if (powers.size() > 0) {
+            power1 = powers.get(0);
+            if (power1.length() > 9) {
+                power1 = power1.substring(0, 9);
             }
         }
-        lines[4] = String.format("| %-9s |", powerStr);
-        lines[5] = "|           |";
+        if (powers.size() > 1) {
+            power2 = powers.get(1);
+            if (power2.length() > 9) {
+                power2 = power2.substring(0, 9);
+            }
+        }
+        lines[4] = String.format("| %-9s |", power1);
+        lines[5] = String.format("| %-9s |", power2);
         lines[6] = "*-----------*";
         return lines;
     }

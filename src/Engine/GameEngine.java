@@ -306,8 +306,8 @@ public class GameEngine {
             m_board = new Board();
             Random rand = new Random();
             for (int i=0; i< 4;i++){
-                int r1 = rand.nextInt(1000); //une chance sur 8 d'avoir un obstacle
-                int r2 = rand.nextInt(1000);
+                int r1 = rand.nextInt(6); //une chance sur 8 d'avoir un obstacle
+                int r2 = rand.nextInt(4);
                 if (r1 == 1){
                     m_board.getSlot(Board.ROW_PLAYER,i).setCard(CardFactory.createRandomObstacle());
                 }
