@@ -9,6 +9,11 @@ public class PiquesPointues extends Power{
     }
 
     @Override
+    public String getShortName() {
+        return "P.Pique";
+    }
+
+    @Override
     public void onReceiveDamage(AnimalCard attacker) {
         attacker.takeDamage(1);
     }

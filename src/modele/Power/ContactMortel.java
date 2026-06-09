@@ -11,6 +11,11 @@ public class ContactMortel extends Power{
     }
 
     @Override
+    public String getShortName() {
+        return "C.Mortel";
+    }
+
+    @Override
     public int modifyDamage(AnimalCard attacker, Card defender,int damage) {
         Optional<AnimalCard> optdefender = defender.isAnimal();
         if(optdefender.isPresent()) {

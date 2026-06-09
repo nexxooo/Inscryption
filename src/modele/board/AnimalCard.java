@@ -41,7 +41,14 @@ public class AnimalCard extends Card {
 
     @Override
     public String toString() {
-        return getNom() + " PV : " + getMaxHealth() + " ATK : " + getAttackPoints() + " BLOOD : " + getBloodCost() + " BONES : " + getBoneCost();
+        String res= getNom() + " PV : " + getMaxHealth() + " ATK : " + getAttackPoints() + " BLOOD : " + getBloodCost() + " BONES : " + getBoneCost();
+        if(!m_power.isEmpty()){
+            res += " Power: ";
+            for(Power p : m_power){
+                res += p.getName()+"  ";
+            }
+        }
+        return res;
     }
 
     @Override
@@ -49,9 +56,25 @@ public class AnimalCard extends Card {
         String[] lines = new String[7];
         lines[0] = "*-----------*";
         lines[1] = String.format("| %-9s |", getNom());
-        lines[2] = "|-----------|";
-        lines[3] = String.format("| PV: %-5d |", getHealthPoints());
-        lines[4] = String.format("| Att: %-4d |", getAttackPoints());
+        lines[2] = String.format("| PV: %-5d |", getHealthPoints());
+        lines[3] = String.format("| Att: %-4d |", getAttackPoints());
+        
+        List<String> powers = new java.util.ArrayList<>();
+        if (isFlying()) {
+            powers.add("Volant");
+        }
+        for (Power p : getPower()) {
+            powers.add(p.getShortName());
+        }
+        
+        String powerStr = "";
+        if (!powers.isEmpty()) {
+            powerStr = String.join(" ", powers);
+            if (powerStr.length() > 9) {
+                powerStr = powerStr.substring(0, 9);
+            }
+        }
+        lines[4] = String.format("| %-9s |", powerStr);
         lines[5] = "|           |";
         lines[6] = "*-----------*";
         return lines;

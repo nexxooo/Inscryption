@@ -12,6 +12,11 @@ public class Croissance extends Power {
     }
 
     @Override
+    public String getShortName() {
+        return "Croiss.";
+    }
+
+    @Override
     public void onDebut(Slot slot) {
         Optional<AnimalCard> optcrad = CardFactory.createAnimalCard("loup");
         slot.setCard(optcrad.get());
