@@ -27,7 +27,6 @@ public class AnimalCard extends Card {
        addPower(power);
     }
 
-    @Override
     public int getAttackPoints(){
         return m_attackPoints;
     }

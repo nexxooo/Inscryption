@@ -34,9 +34,7 @@ public abstract class Card {
         return m_healthPoints;
     }
     public abstract String[] getCardAscii();
-    public int getAttackPoints(){
-        return 0;
-    }
+
 
 
     public Optional<AnimalCard> isAnimal(){
