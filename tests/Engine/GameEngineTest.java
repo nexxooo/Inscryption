@@ -199,4 +199,117 @@ public class GameEngineTest {
         assertEquals(1, player.getDeck().sizeDeck());
         assertEquals(grizzly, player.getDeck().getCard(0));
     }
+
+    @Test
+    public void testPlayerWinsRound() {
+        HumanPlayer player = new HumanPlayer();
+        Score score = new Score();
+        GameView view = new GameView();
+        
+        setSimulatedInput("fin\nfin\nfin\n");
+        InputHandeler input = new InputHandeler();
+
+        GameEngine engine = new GameEngine(player, score, view, input) {
+            @Override
+            void initBoard() {
+                Board board = new Board();
+                board.getSlot(Board.ROW_PLAYER, 0).setCard(new AnimalCard("Loup", 2, 3, 2, 0, false));
+                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                setBoard(board);
+            }
+        };
+
+        engine.round();
+
+        assertTrue(score.getScore() >= 5);
+    }
+
+    @Test
+    public void testPlayerLosesRound() {
+        HumanPlayer player = new HumanPlayer();
+        Score score = new Score();
+        GameView view = new GameView();
+        
+        setSimulatedInput("fin\nfin\nfin\n");
+        InputHandeler input = new InputHandeler();
+
+        GameEngine engine = new GameEngine(player, score, view, input) {
+            @Override
+            void initBoard() {
+                Board board = new Board();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).setCard(new AnimalCard("Grizzly", 6, 4, 3, 0, false));
+                board.getSlot(Board.ROW_PLAYER, 0).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                setBoard(board);
+            }
+        };
+
+        engine.round();
+
+        assertTrue(score.getScore() <= -5);
+    }
+
+    @Test
+    public void testContactMortelDoesNotKillObstacle() {
+        HumanPlayer player = new HumanPlayer();
+        Score score = new Score();
+        GameView view = new GameView();
+        InputHandeler input = new InputHandeler();
+        GameEngine engine = new GameEngine(player, score, view, input);
+
+        Board board = new Board();
+        
+        AnimalCard vipere = new AnimalCard("Vipere", 1, 1, 2, 0, false, new modele.Power.ContactMortel());
+        board.getSlot(Board.ROW_PLAYER, 0).setCard(vipere);
+
+        modele.board.ObstacleCard rocher = new modele.board.ObstacleCard("Rocher", 5);
+        board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).setCard(rocher);
+
+        engine.setBoard(board);
+
+        engine.attackPhase(Board.ROW_PLAYER, Board.ROW_OPPONENT_ACTIVE, true);
+
+        assertEquals(4, rocher.getHealthPoints());
+        assertFalse(rocher.isDead());
+        assertFalse(board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).isEmpty());
+    }
+
+    @Test
+    public void testPlayGamePlayerVictory() {
+        HumanPlayer player = new HumanPlayer();
+        Score score = new Score();
+        GameView view = new GameView();
+        
+        setSimulatedInput("fin\nfin\nfin\nfin\n0\n0\n0\nfin\nfin\n");
+        InputHandeler input = new InputHandeler();
+
+        GameEngine engine = new GameEngine(player, score, view, input) {
+            @Override
+            void initBoard() {
+                Board board = new Board();
+                board.getSlot(Board.ROW_PLAYER, 0).setCard(new AnimalCard("Loup", 2, 3, 2, 0, false));
+                board.getSlot(Board.ROW_PLAYER, 1).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 2).removeCard();
+                board.getSlot(Board.ROW_PLAYER, 3).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 0).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 1).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 2).removeCard();
+                board.getSlot(Board.ROW_OPPONENT_ACTIVE, 3).removeCard();
+                setBoard(board);
+            }
+        };
+
+        engine.play();
+    }
 }

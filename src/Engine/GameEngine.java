@@ -227,7 +227,7 @@ public class GameEngine {
         System.out.println("Pouvoir(s) transféré(s) à " + cardCible.getNom() + " !");
     }
 
-        private void round () {
+        void round () {
             initBoard();
             for (int i = 0; i < 4; i++) {
                 m_player.draw();
@@ -310,7 +310,7 @@ public class GameEngine {
             }
         }
 
-        private void initBoard(){
+        void initBoard(){
             m_board = new Board();
             Random rand = new Random();
             for (int i=0; i< 4;i++){
