@@ -18,7 +18,17 @@ public class Croissance extends Power {
 
     @Override
     public void onDebut(Board board, int row, int col) {
+        Optional<AnimalCard> oldCardOpt = board.getAnimalCard(row, col);
         Optional<AnimalCard> optcrad = CardFactory.createAnimalCard("loup");
-        board.setCard(optcrad.get(), row, col);
+        if (optcrad.isPresent() && oldCardOpt.isPresent()) {
+            AnimalCard newLoup = optcrad.get();
+            AnimalCard oldLouveteau = oldCardOpt.get();
+            for (Power p : oldLouveteau.getPower()) {
+                if (!(p instanceof Croissance)) {
+                    newLoup.addPower(p);
+                }
+            }
+            board.setCard(newLoup, row, col);
+        }
     }
 }
