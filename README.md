@@ -65,12 +65,3 @@ Pour valider le bon fonctionnement de l'application, nous avons écrit une suite
    * [InputHandelerTest.java](file:///home/nexxo/project-inscryption/tests/vue/InputHandelerTest.java) : Vérifie la gestion des commandes utilisateurs, le filtrage des mauvaises entrées et la validation des coordonnées du plateau.
 
 ---
-
-
-
-## Conception et Architecture (UML)
-
-Le diagramme de classes de la semaine 5 est disponible sous [semaine5.puml](file:///home/nexxo/project-inscryption/uml/semaine5.puml). Il documente :
-* Le découpage propre en packages (`modele`, `modele.board`, `modele.player`, `modele.Power`, `vue`, `Engine`).
-* L'absence de couplage direct via des chaînes de getters grâce à l'application de la **loi de Déméter**.
-* La structure du système de pouvoirs basée sur le polymorphisme.
