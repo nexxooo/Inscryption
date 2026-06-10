@@ -1,5 +1,5 @@
 
-## 🎮 Fonctionnalités Implémentées
+## Fonctionnalités Implémentées
 
 L'intégralité du sujet des **Phases 1 et 2** a été implémentée.
 
@@ -37,7 +37,7 @@ Tous les pouvoirs de la Phase 2 ont été implémentés à l'aide d'un design or
 
 ---
 
-## 🧪 Tests Unitaires et d'Intégration (`tests`)
+## Tests Unitaires et d'Intégration (`tests`)
 
 Pour valider le bon fonctionnement de l'application, nous avons écrit une suite complète de tests unitaires et d'intégration avec JUnit 4/5.
 
@@ -68,7 +68,7 @@ Pour valider le bon fonctionnement de l'application, nous avons écrit une suite
 
 
 
-## 🗺️ Conception et Architecture (UML)
+## Conception et Architecture (UML)
 
 Le diagramme de classes de la semaine 5 est disponible sous [semaine5.puml](file:///home/nexxo/project-inscryption/uml/semaine5.puml). Il documente :
 * Le découpage propre en packages (`modele`, `modele.board`, `modele.player`, `modele.Power`, `vue`, `Engine`).
