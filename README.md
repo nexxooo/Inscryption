@@ -1,67 +1,90 @@
+# 👁️ Inscryption — Adaptation Java Console (Architecture MVC)
 
-## Fonctionnalités Implémentées
+[![Java Version](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://www.oracle.com/java/)
+[![JUnit Version](https://img.shields.io/badge/JUnit-5-blue.svg)](https://junit.org/junit5/)
+[![Architecture](https://img.shields.io/badge/Architecture-MVC-green.svg)]()
 
-L'intégralité du sujet des **Phases 1 et 2** a été implémentée.
-
-### 1. Structure de Jeu et Moteur (`Engine`)
-* **Déroulement de la partie** : Le jeu se joue en **3 manches** (le joueur gagne s'il remporte au moins 2 des 3 manches).
-* **Moteur de jeu (`GameEngine`)** : Gère l'initialisation de la partie, les tours de jeu alternés, et la phase d'attaque à la fin de chaque tour.
-* **Affichage console dynamique** : Représentation ASCII du plateau de jeu (3 lignes de 4 emplacements), du score (balance), de la main et de la pioche.
-
-### 2. Cartes et Plateau de Jeu (`modele.board`)
-* **Grille de jeu (`Board`)** : Divisée en 3 lignes : la file d'attente de l'adversaire (indiquant ses intentions de jeu), la ligne active de l'adversaire, et la ligne du joueur.
-* **Obstacles** : Présence d'obstacles destructibles (`Rocher` et `Sapin`) placés de manière semi-aléatoire en début de manche.
-* **Cartes animaux** : Implémentation de toutes les créatures avec affichage de leurs caractéristiques et de leurs pouvoirs (Écureuil, Chat, Moineau, Corbeau, Hermine, Louveteau, Loup, Grizzly, Coyote, Punaise, Élan, Vipère, Porc-épic).
-
-### 3. Gestion des Joueurs et Ressources (`modele.player`)
-* **Ressources d'invocation** : 
-  * Coût en **Sang** (gouttes de sang) : nécessite le sacrifice de créatures du joueur déjà présentes sur le plateau.
-  * Coût en **Os** : accumulés à chaque fois qu'une créature du joueur meurt (cimetière `Graves`).
-* **Pioche et Main** : Pioche de cartes avec mélange initial et gestion de la main (`Hand`).
-* **Intelligence Artificielle (`OpponentAI`)** : L'adversaire joue de manière prévisible selon une file d'attente de cartes définie, assurant une stratégie déterministe propice aux tests.
-
-### 4. Pouvoirs Spéciaux (`modele.Power`)
-Tous les pouvoirs de la Phase 2 ont été implémentés à l'aide d'un design orienté objet polymorphe :
-* **Nombreuses Vies (`NombreuseVie`)** : Le Chat reste en vie sur le plateau lorsqu'il est sacrifiée.
-* **Croissance (`Croissance`)** : Le Louveteau se transforme automatiquement en Loup au début du tour suivant son placement, **en conservant tous ses autres pouvoirs** (transférés via la Pierre de Sacrifice).
-* **Puant (`Puant`)** : Réduit de 1 point l'attaque de la créature adverse qui lui fait face.
-* **Coureur (`Coureur`)** : L'Élan se déplace d'un emplacement vers la droite après avoir attaqué (ou vers la gauche si la droite est bloquée).
-* **Contact Mortel (`ContactMortel`)** : La Vipère élimine instantanément toute créature à laquelle elle inflige des dégâts (ne fonctionne pas sur les obstacles).
-* **Piques Pointues (`PiquesPointues`)** : Le Porc-épic inflige 1 point de dégât en retour à toute créature qui l'attaque.
-
-### 5. Pierre de Sacrifice (Événement Inter-manches)
-À la fin de la deuxième manche (et après avoir choisi une nouvelle carte à ajouter au Deck parmi 3 propositions), le joueur accède à la Pierre de Sacrifice :
-* Permet de choisir une carte de son deck à sacrifier pour récupérer son pouvoir.
-* Permet ensuite de transférer ce pouvoir sur une autre carte animal du deck.
-* La carte sacrifiée est définitivement retirée du deck.
+Cette application est une implémentation logicielle orientée objet en **Java 17** du jeu de cartes tactique **Inscryption**. Le projet a été conçu selon des principes rigoureux de conception logicielle (patterns MVC, Factory, polymorphisme) pour garantir l'extensibilité, la testabilité et une séparation stricte des responsabilités.
 
 ---
 
-## Tests Unitaires et d'Intégration (`tests`)
+## 🏗️ Architecture Logicielle & Design Patterns
 
-Pour valider le bon fonctionnement de l'application, nous avons écrit une suite complète de tests unitaires et d'intégration avec JUnit 4/5.
+Le système est structuré autour du patron d'architecture **Modèle-Vue-Contrôleur (MVC)** pour découpler l'état du jeu, la logique métier, et l'interface utilisateur en mode console.
 
-### Liste des Suites de Tests et Couverture :
-1. **Attaque et Combat** :
-   * [GameEngineTest.java](file:///home/nexxo/project-inscryption/tests/Engine/GameEngineTest.java) : Teste les combats simples, les dégâts directs, le surplus de dégâts infligés au score lors de la mort d'une créature bloqueuse, et le vol (Moineau/Corbeau) passant par-dessus les bloqueurs.
-   * [SimulationTour.java](file:///home/nexxo/project-inscryption/tests/Engine/SimulationTour.java) : Test d'intégration simulant un tour complet de jeu (saisies utilisateur simulées, pioche, placement, résolution de combat, attaques de l'IA et mise à jour du score).
-2. **Pouvoirs Individuels** :
-   * [NombreuseVieTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/NombreuseVieTest.java) : Vérifie que le sacrifice d'une carte avec ce pouvoir ne la retire pas du plateau.
-   * [CroissanceTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/CroissanceTest.java) : Vérifie la transformation du Louveteau en Loup au début du tour et le transfert de ses autres pouvoirs.
-   * [PuantTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/PuantTest.java) : Vérifie la réduction d'attaque subie par la créature en face.
-   * [CoureurTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/CoureurTest.java) : Vérifie le déplacement latéral après l'attaque et le correctif anti-multi-attaques.
-   * [ContactMortelTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/ContactMortelTest.java) : Vérifie que la Vipère élimine une créature adverse en un coup mais n'applique pas cet effet aux obstacles.
-   * [PiquesPointuesTest.java](file:///home/nexxo/project-inscryption/tests/modele/Power/PiquesPointuesTest.java) : Vérifie les dégâts de retour infligés à l'attaquant.
-3. **Composants** :
-   * [BoardTest.java](file:///home/nexxo/project-inscryption/tests/modele/board/BoardTest.java) : Teste la grille, le placement et le déplacement de cartes.
-   * [CardFactoryTest.java](file:///home/nexxo/project-inscryption/tests/modele/board/CardFactoryTest.java) : Teste la création correcte de chaque type de carte et d'obstacle.
-   * [ScoreTest.java](file:///home/nexxo/project-inscryption/tests/modele/board/ScoreTest.java) : Teste le calcul du score et la détection de victoire/défaite (balance à 5/-5).
-   * [SlotTest.java](file:///home/nexxo/project-inscryption/tests/modele/board/SlotTest.java) : Teste l'état vide/occupé des slots et la gestion du cimetière.
-   * [DeckTest.java](file:///home/nexxo/project-inscryption/tests/modele/player/DeckTest.java) : Gère la pioche, la distribution et le mélange.
-   * [HandTest.java](file:///home/nexxo/project-inscryption/tests/modele/player/HandTest.java) : Gestion de la main et de ses index.
-   * [GravesTest.java](file:///home/nexxo/project-inscryption/tests/modele/player/GravesTest.java) : Gestion des os lors de la mort d'une carte.
-   * [OpponentAITest.java](file:///home/nexxo/project-inscryption/tests/modele/player/OpponentAITest.java) : Teste le comportement déterministe de placement de l'IA.
-4. **Validation et Saisie** :
-   * [InputHandelerTest.java](file:///home/nexxo/project-inscryption/tests/vue/InputHandelerTest.java) : Vérifie la gestion des commandes utilisateurs, le filtrage des mauvaises entrées et la validation des coordonnées du plateau.
+```mermaid
+graph TD
+    Main[Main] --> GameEngine[Engine.GameEngine]
+    GameEngine --> Board[modele.board.Board]
+    GameEngine --> HumanPlayer[modele.player.HumanPlayer]
+    GameEngine --> OpponentAI[modele.player.OpponentAI]
+    GameEngine --> GameView[vue.GameView]
+    GameEngine --> InputHandeler[vue.InputHandeler]
+    Board --> Slot[modele.board.Slot]
+    Slot --> Card[modele.board.Card]
+    CardFactory[modele.board.CardFactory] -.-> Card
+```
+
+### 1. Le Modèle (`modele`)
+Contient l'état de l'application et la logique métier pure, sans aucune dépendance envers l'affichage ou les entrées utilisateur.
+* **Hiérarchie des Cartes (Polymorphisme)** : 
+  * [Card](file:///home/nexxo/project-inscryption/src/modele/board/Card.java) (classe abstraite de base) définit les propriétés communes (nom, points de vie actuels et maximaux).
+  * [AnimalCard](file:///home/nexxo/project-inscryption/src/modele/board/AnimalCard.java) étend `Card` en y ajoutant les attributs d'attaque, les capacités de vol, et les coûts d'invocation (Sang / Os).
+  * [ObstacleCard](file:///home/nexxo/project-inscryption/src/modele/board/ObstacleCard.java) représente les éléments de décor destructibles du plateau.
+* **Gestion du Plateau** : 
+  * [Board](file:///home/nexxo/project-inscryption/src/modele/board/Board.java) encapsule une matrice de $3 \times 4$ instances de [Slot](file:///home/nexxo/project-inscryption/src/modele/board/Slot.java) modélisant la file d'attente adverse, la ligne active adverse et la ligne du joueur.
+* **Structures de Données des Joueurs** :
+  * [Player](file:///home/nexxo/project-inscryption/src/modele/player/Player.java) gère les agrégations de cartes via [Deck](file:///home/nexxo/project-inscryption/src/modele/player/Deck.java), [Hand](file:///home/nexxo/project-inscryption/src/modele/player/Hand.java), et [Graves](file:///home/nexxo/project-inscryption/src/modele/player/Graves.java) (cimetière servant au calcul de la ressource d'Os).
+* **Pattern Factory** :
+  * [CardFactory](file:///home/nexxo/project-inscryption/src/modele/board/CardFactory.java) centralise l'instanciation des cartes d'animaux et d'obstacles sous forme d'objets immuables ou configurés à la volée.
+
+### 2. Le Contrôleur (`Engine`)
+* [GameEngine](file:///home/nexxo/project-inscryption/src/Engine/GameEngine.java) orchestrateur principal. Il orchestre la boucle de jeu, la gestion des tours de table, l'exécution séquentielle de la phase d'attaque (calcul des dégâts directs vs combat de cartes), et la résolution des capacités spéciales (comme le vol des créatures).
+
+### 3. La Vue (`vue`)
+* [GameView](file:///home/nexxo/project-inscryption/src/vue/GameView.java) : Responsable du rendu visuel ASCII dans le terminal. Reçoit le modèle en lecture seule et formate les cartes sous forme de blocs de chaînes pour un affichage aligné.
+* [InputHandeler](file:///home/nexxo/project-inscryption/src/vue/InputHandeler.java) : Gère la capture des entrées au clavier (`Scanner`), effectue des validations de format par expressions régulières et lève des alertes explicites en cas de saisie invalide (ex: coordonnées de plateau hors limites ou cartes inexistantes en main).
 
 ---
+
+## 🛠️ Spécifications Techniques & Capacités Spéciales
+
+Les règles de combat intègrent des comportements spécifiques implémentés via des drapeaux d'états et de la logique conditionnelle lors des phases d'attaque :
+* **Dégâts Directs et Excessifs** : Si un emplacement faisant face à une carte attaquante est vide, l'attaque affecte directement l'objet [Score](file:///home/nexxo/project-inscryption/src/modele/Score.java). En cas de destruction d'une carte adverse par excès de dégâts, le surplus est reporté sur le score.
+* **Capacité Volant** : Court-circuite la vérification de présence de carte sur le slot adverse, appliquant les dégâts directement au score.
+* **Ressources d'Invocation** : 
+  * Gestion dynamique des sacrifices via la sélection d'indices de slots joueurs et libération des ressources associées.
+  * Suivi incrémental du cimetière (`Graves`) pour alimenter le compteur de ressources osseuses.
+
+---
+
+## ⚙️ Compilation et Exécution
+
+### Prérequis
+* **JDK 17** ou supérieur installé.
+
+### Processus de Build
+Pour compiler les fichiers sources Java sans dépendre d'un système de build tiers :
+* **Linux / macOS** :
+  ```bash
+  javac -d out $(find src -name "*.java")
+  ```
+* **Windows** :
+  ```cmd
+  dir /s /b src\*.java > sources_src.txt
+  javac -d out @sources_src.txt
+  ```
+
+### Exécution du Moteur
+Démarrez l'application principale via la JVM :
+```bash
+java -cp out Main
+```
+
+### Tests Unitaires
+Les cas de test (attaques, calcul du score, distribution des cartes et pioches, sacrifices) sont validés sous **JUnit 5**. Ils peuvent être exécutés directement au sein de votre IDE (comme **IntelliJ IDEA**) configuré avec les librairies d'exécution JUnit Jupiter.
+
+---
+
+## 📊 Diagrammes de Conception
+Des diagrammes de classes UML au format PlantUML sont disponibles dans le dossier `uml/` afin de tracer l'évolution du modèle au cours des phases de développement (voir notamment `uml/semaine4.puml`).
