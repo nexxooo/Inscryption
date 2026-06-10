@@ -310,6 +310,7 @@ package "Engine" {
         ~ chooseNewCard() : void
         ~ Stone() : void
         ~ round() : void
+        - applyStartOfTurnEffects(row: int) : void
         ~ playerTurn() : void
         - placeCard(card: AnimalCard, row: int, col: int) : void
         - placeCradBones(card: AnimalCard, row: int, col: int) : void

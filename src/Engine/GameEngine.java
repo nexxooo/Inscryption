@@ -1,6 +1,7 @@
 package Engine;
 
 import modele.Power.Power;
+import modele.Power.Croissance;
 import modele.Score;
 import modele.board.*;
 import modele.player.*;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
 
 public class GameEngine {
     private HumanPlayer m_player;
@@ -45,8 +48,13 @@ public class GameEngine {
     }
 
     void attackPhase(int indexAttackRow, int indexDefenseRow, boolean isPlayerAttack) {
+        Set<Card> alreadyAttacked = new HashSet<>();
         for (int i = 0; i < 4; i++) {
-            resolveSlotCombat(indexAttackRow, indexDefenseRow, isPlayerAttack, i);
+            Card card = m_board.getCard(indexAttackRow, i);
+            if (card != null && !alreadyAttacked.contains(card)) {
+                resolveSlotCombat(indexAttackRow, indexDefenseRow, isPlayerAttack, i);
+                alreadyAttacked.add(card);
+            }
             try{
                 Thread.sleep(200); // pour laisser le temps de lire
             }
@@ -67,9 +75,6 @@ public class GameEngine {
         }
 
         AnimalCard attackerAnimal = optAttacker.get();
-        for(Power power : attackerAnimal.getPower()) {
-            power.onDebut(m_board, indexAttackRow, col);
-        }
         int damage = attackerAnimal.getAttackPoints();
         Optional<AnimalCard> optDefender = m_board.getAnimalCard(indexDefenseRow, col);
         if (optDefender.isPresent()) {
@@ -231,6 +236,8 @@ public class GameEngine {
                 m_player.draw();
             }
             while (m_score.getScore() < 5 && m_score.getScore() > -5) {
+                applyStartOfTurnEffects(Board.ROW_PLAYER);
+                applyStartOfTurnEffects(Board.ROW_OPPONENT_ACTIVE);
                 playerTurn();
                 m_board.advanceRow();
                 attackPhase(Board.ROW_OPPONENT_ACTIVE, Board.ROW_PLAYER, false);
@@ -238,6 +245,21 @@ public class GameEngine {
             }
             m_board.clearBoard(m_player.getDeck());
 
+        }
+
+        private void applyStartOfTurnEffects(int row) {
+            for (int col = 0; col < 4; col++) {
+                Optional<AnimalCard> optAnimal = m_board.getAnimalCard(row, col);
+                if (optAnimal.isPresent()) {
+                    AnimalCard animal = optAnimal.get();
+                    List<Power> powers = new ArrayList<>(animal.getPower());
+                    for (Power p : powers) {
+                        if (p instanceof Croissance) {
+                            p.onDebut(m_board, row, col);
+                        }
+                    }
+                }
+            }
         }
 
         void playerTurn(){
@@ -254,18 +276,34 @@ public class GameEngine {
                     Optional<List<Integer>> optsacrifice = m_input.askSacrifices(card.getBloodCost(),m_board);
                     if (optsacrifice.isPresent()) {
                         List<Integer> sacrifice = optsacrifice.get();
-                        for(Integer i : sacrifice){
-                            Optional<AnimalCard> optcards = m_board.getAnimalCard(Board.ROW_PLAYER, i);
-                            AnimalCard cards = optcards.get();
-                            if(!cards.hasPower("Nombreuse Vie")) {
-                                m_board.removeCard(Board.ROW_PLAYER, i, m_player.getGraves());
+                        int targetSlot = m_input.getIndexSlot();
+                        
+                        boolean targetWillBeEmpty = false;
+                        if (m_board.isEmpty(Board.ROW_PLAYER, targetSlot)) {
+                            targetWillBeEmpty = true;
+                        } else {
+                            if (sacrifice.contains(targetSlot)) {
+                                Optional<AnimalCard> targetCard = m_board.getAnimalCard(Board.ROW_PLAYER, targetSlot);
+                                if (targetCard.isPresent() && !targetCard.get().hasPower("Nombreuse Vie")) {
+                                    targetWillBeEmpty = true;
+                                }
                             }
                         }
-                        if (m_board.isEmpty(Board.ROW_PLAYER, m_input.getIndexSlot())) {
-                            m_board.setCard(card, Board.ROW_PLAYER, m_input.getIndexSlot());
+
+                        if (targetWillBeEmpty) {
+                            for(Integer i : sacrifice){
+                                Optional<AnimalCard> optcards = m_board.getAnimalCard(Board.ROW_PLAYER, i);
+                                if (optcards.isPresent()) {
+                                    AnimalCard cards = optcards.get();
+                                    if(!cards.hasPower("Nombreuse Vie")) {
+                                        m_board.removeCard(Board.ROW_PLAYER, i, m_player.getGraves());
+                                    }
+                                }
+                            }
+                            m_board.setCard(card, Board.ROW_PLAYER, targetSlot);
                             m_player.removeHandCard(m_input.getIndexCard());
                         } else {
-                            System.out.println("slot deja pris");
+                            System.out.println("Erreur: Le slot cible n'est pas disponible (il contient un obstacle ou une créature non sacrifiée/immortelle). Les sacrifices ont été annulés.");
                         }
                     }
 
